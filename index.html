@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Panel VUELVEN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Onest:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#f3f6f4; --surface:#ffffff; --surface-2:#e8efeb; --ink:#142226; --muted:#56696a; --line:#d4ded9;
+  --green:#1d6b52; --green-ink:#ffffff; --green-soft:#d5ebe2; --amber:#9a6412; --amber-soft:#f6e3b4;
+  --red:#b3261e; --red-soft:#f8dcd9; --blue:#2c5f8a; --blue-soft:#dbe8f3;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Onest","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0e1615; --surface:#15201e; --surface-2:#1b2927; --ink:#e6efeb; --muted:#9db0ab; --line:#2a3b38;
+    --green:#58c29a; --green-ink:#07130f; --green-soft:#17372d; --amber:#e8b455; --amber-soft:#3a2c10;
+    --red:#f07a6e; --red-soft:#3d1a17; --blue:#7fb2e0; --blue-soft:#172a3a;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0e1615; --surface:#15201e; --surface-2:#1b2927; --ink:#e6efeb; --muted:#9db0ab; --line:#2a3b38;
+  --green:#58c29a; --green-ink:#07130f; --green-soft:#17372d; --amber:#e8b455; --amber-soft:#3a2c10;
+  --red:#f07a6e; --red-soft:#3d1a17; --blue:#7fb2e0; --blue-soft:#172a3a;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;padding-inline:16px;padding-block:0 60px;margin:0}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);margin:0;color:var(--ink);text-wrap:balance}
+h1{font-size:1.5rem;font-weight:800}
+h2{font-size:1.2rem;font-weight:700}
+h3{font-size:1rem;font-weight:700}
+p{margin:0;color:var(--ink)}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+a{color:var(--green)}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding-block:14px}
+.brand{display:flex;align-items:center;gap:10px}
+.mark{width:28px;height:28px;border-radius:8px;background:var(--green);display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:6px;flex:none}
+.mark i{background:var(--green-ink);border-radius:2px}
+.mark i:nth-child(2){opacity:.4}
+.top .right{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.demo-bar{background:var(--amber-soft);color:var(--ink);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.9rem}
+.demo-bar b{color:var(--amber)}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;padding-block:8px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+nav.tabs button{flex:none;border:0;background:transparent;color:var(--muted);font:600 .92rem var(--body);padding:8px 12px;border-radius:8px;cursor:pointer;position:relative}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+nav.tabs .n{display:inline-block;min-width:1.4em;margin-left:5px;padding:0 5px;border-radius:999px;background:var(--red);color:#fff;font:600 .72rem var(--mono);line-height:1.5}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:12px}
+.stack{display:grid;gap:14px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+label{font-weight:600;font-size:.86rem;color:var(--ink);display:grid;gap:5px}
+input,select,textarea{font:500 .95rem var(--body);padding:9px 11px;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+textarea{min-height:84px;resize:vertical;line-height:1.45}
+.hint{font-weight:400;font-size:.8rem;color:var(--muted)}
+.btn{border:0;border-radius:9px;padding:9px 13px;font:600 .9rem var(--body);cursor:pointer;background:var(--surface-2);color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn.main{background:var(--green);color:var(--green-ink)}
+.btn.warn{background:var(--red-soft);color:var(--red)}
+.btn.sel{outline:2px solid var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,nav.tabs button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.between{justify-content:space-between}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.kpi b{display:block;font:500 1.25rem var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+.kpi span{font-size:.8rem;color:var(--muted)}
+.kpi.good b{color:var(--green)}
+.kpi.bad b{color:var(--red)}
+.item{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:8px;background:var(--surface)}
+.item-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.item-top strong{font-size:1rem;color:var(--ink)}
+.meta{font-size:.82rem;color:var(--muted);font-family:var(--mono)}
+.msg{background:var(--surface-2);border-radius:10px;padding:9px 11px;font-size:.9rem;color:var(--ink);white-space:pre-wrap}
+.pill{font-size:.76rem;font-weight:600;border-radius:999px;padding:3px 9px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.pill.blue{background:var(--blue-soft);color:var(--blue)}
+.pill.amber{background:var(--amber-soft);color:var(--amber)}
+.pill.green{background:var(--green-soft);color:var(--green)}
+.pill.red{background:var(--red-soft);color:var(--red)}
+.section-title{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;color:var(--ink)}
+th{background:var(--surface-2);font-weight:600;white-space:nowrap}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.total td{font-weight:700;border-top:2px solid var(--ink)}
+pre.report{white-space:pre-wrap;background:var(--surface-2);border-radius:10px;padding:12px;font:500 .85rem var(--mono);color:var(--ink);margin:0}
+.empty{color:var(--muted);padding:6px 2px}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:.9rem;z-index:20;max-width:90vw}
+.login{max-width:420px;margin:8vh auto 0;display:grid;gap:14px}
+.confirm{background:var(--red-soft);border-radius:10px;padding:12px;display:grid;gap:10px;color:var(--ink)}
+details.box{border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+details.box summary{cursor:pointer;padding:12px 14px;font-weight:600;color:var(--ink)}
+details.box .in{padding:0 14px 14px;display:grid;gap:10px}
+@media (max-width:520px){h1{font-size:1.25rem}.card{padding:13px}}
+
+/* ---------- v2: colores por herramienta ---------- */
+:root{--badge-ink:#ffffff}
+.m-llamadas{--m:#c0392b;--ms:#fbe3e0}.m-citas{--m:#2563b0;--ms:#dde9f8}.m-presupuestos{--m:#c25a0a;--ms:#fde7d3}.m-revisiones{--m:#0e7490;--ms:#d6eff5}
+.m-dormidos{--m:#1d6b52;--ms:#d5ebe2}.m-reposicion{--m:#5f7a14;--ms:#e8f0d2}.m-club{--m:#0f766e;--ms:#d3efec}.m-cobros{--m:#9f1239;--ms:#fbe0e7}
+.m-resenas{--m:#a16207;--ms:#f9edc8}.m-recomendaciones{--m:#9d3e8e;--ms:#f6e0f1}.m-informe{--m:#334155;--ms:#e5e9ef}.m-ajustes,.m-clinicas{--m:#4b5563;--ms:#e7e9ec}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--badge-ink:#0b0f12}
+  :root:not([data-theme="light"]) .m-llamadas{--m:#ff8a7a;--ms:#3a1714}:root:not([data-theme="light"]) .m-citas{--m:#7fb0f0;--ms:#13253d}:root:not([data-theme="light"]) .m-presupuestos{--m:#ffa25c;--ms:#3a220e}:root:not([data-theme="light"]) .m-revisiones{--m:#5cc9e3;--ms:#0f2e36}
+  :root:not([data-theme="light"]) .m-dormidos{--m:#58c29a;--ms:#17372d}:root:not([data-theme="light"]) .m-reposicion{--m:#b4d65a;--ms:#27300f}:root:not([data-theme="light"]) .m-club{--m:#4fd1c5;--ms:#0f2f2c}:root:not([data-theme="light"]) .m-cobros{--m:#fb7fa0;--ms:#3a1220}
+  :root:not([data-theme="light"]) .m-resenas{--m:#f2c14e;--ms:#3a2d0c}:root:not([data-theme="light"]) .m-recomendaciones{--m:#e89bd9;--ms:#361731}:root:not([data-theme="light"]) .m-informe{--m:#b6c2d3;--ms:#1e2632}:root:not([data-theme="light"]) .m-ajustes,:root:not([data-theme="light"]) .m-clinicas{--m:#c3c9d1;--ms:#22272e}}
+:root[data-theme="dark"]{--badge-ink:#0b0f12}
+:root[data-theme="dark"] .m-llamadas{--m:#ff8a7a;--ms:#3a1714}:root[data-theme="dark"] .m-citas{--m:#7fb0f0;--ms:#13253d}:root[data-theme="dark"] .m-presupuestos{--m:#ffa25c;--ms:#3a220e}:root[data-theme="dark"] .m-revisiones{--m:#5cc9e3;--ms:#0f2e36}
+:root[data-theme="dark"] .m-dormidos{--m:#58c29a;--ms:#17372d}:root[data-theme="dark"] .m-reposicion{--m:#b4d65a;--ms:#27300f}:root[data-theme="dark"] .m-club{--m:#4fd1c5;--ms:#0f2f2c}:root[data-theme="dark"] .m-cobros{--m:#fb7fa0;--ms:#3a1220}
+:root[data-theme="dark"] .m-resenas{--m:#f2c14e;--ms:#3a2d0c}:root[data-theme="dark"] .m-recomendaciones{--m:#e89bd9;--ms:#361731}:root[data-theme="dark"] .m-informe{--m:#b6c2d3;--ms:#1e2632}:root[data-theme="dark"] .m-ajustes,:root[data-theme="dark"] .m-clinicas{--m:#c3c9d1;--ms:#22272e}
+
+.chips{display:flex;gap:6px;overflow-x:auto;padding-block:8px;margin-bottom:12px;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg)}
+.chip{flex:none;border:1.5px solid var(--m,var(--line));background:var(--surface);color:var(--m,var(--ink));border-radius:999px;padding:6px 12px;font:600 .86rem var(--body);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-current="true"]{background:var(--m,var(--ink));color:var(--badge-ink)}
+.chip .n{font:600 .72rem var(--mono);background:var(--m);color:var(--badge-ink);border-radius:999px;padding:0 6px;line-height:1.6}
+.chip[aria-current="true"] .n{background:var(--badge-ink);color:var(--m)}
+.chip:focus-visible,.tile:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.hero{display:grid;gap:4px;margin-bottom:14px}
+.hero .big{font:800 2rem var(--display);color:var(--ink)}
+.money{background:var(--green-soft);border-radius:12px;padding:12px 16px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:18px}
+.money b{font:600 1.4rem var(--mono);color:var(--green)}
+.grupo{margin-bottom:18px}
+.grupo h2{font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.tile{text-align:left;border:1.5px solid var(--m);background:var(--ms);border-radius:14px;padding:14px;display:grid;gap:6px;cursor:pointer;font:inherit;color:var(--ink)}
+.tile .t{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tile strong{font:700 1.02rem var(--display);color:var(--m)}
+.tile .cnt{font:600 .95rem var(--mono);background:var(--m);color:var(--badge-ink);border-radius:999px;min-width:2em;text-align:center;padding:1px 8px;white-space:nowrap;flex-shrink:0}
+.tile .cnt.cero{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.tile p{font-size:.86rem;color:var(--ink)}
+.tile .lock{font-size:.78rem;color:var(--muted)}
+.mhead{background:var(--ms);border:1.5px solid var(--m);border-radius:14px;padding:14px 16px;display:grid;gap:6px;margin-bottom:14px}
+.mhead h1{color:var(--m)}
+.mhead .row{justify-content:space-between}
+.mhead .todo{font:600 .9rem var(--mono);background:var(--m);color:var(--badge-ink);border-radius:999px;padding:3px 10px}
+.btn.main{background:var(--m,var(--green));color:var(--badge-ink)}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
+<script src="config.js"></script>
+<script>
+/* Panel VUELVEN — capa de datos.
+   Dos modos con las mismas funciones:
+   - SupaDB: servidor real (Supabase), si existe window.PANEL_CONFIG con url y clave.
+   - DemoDB: todo en este navegador, con datos inventados, para enseñar. */
+(function(){
+var TABLAS=["pacientes","presupuestos","resenas","llamadas","citas","espera","socios","reposiciones","cobros","recomendaciones","resultados"];
+var DAY=86400000;
+function uid(){return "x"+Math.random().toString(36).slice(2)+Date.now().toString(36)}
+function hoyISO(off){var d=new Date(Date.now()-(off||0)*DAY);return d.toISOString().slice(0,10)}
+function isoLocal(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function tsAgo(days,h){return new Date(Date.now()-days*DAY-(h||0)*3600000).toISOString()}
+
+/* ---------------- Servidor real ---------------- */
+function SupaDB(cfg){
+  var sb=window.supabase.createClient(cfg.url,cfg.clave,{auth:{persistSession:true,autoRefreshToken:true}});
+  function ok(r){if(r.error)throw new Error(traducir(r.error.message));return r.data}
+  function traducir(m){
+    if(/Invalid login/i.test(m))return "Correo o contraseña incorrectos.";
+    if(/Email not confirmed/i.test(m))return "Falta confirmar el correo: mira tu bandeja de entrada.";
+    if(/already registered/i.test(m))return "Ese correo ya tiene cuenta. Entra con tu contraseña.";
+    if(/Password should be/i.test(m))return "La contraseña tiene que tener al menos 6 caracteres.";
+    if(/Failed to fetch|NetworkError|Load failed/i.test(m))return "No hay conexión con el servidor. Mira tu internet y vuelve a probar.";
+    return m;
+  }
+  return {
+    demo:false,
+    async usuario(){var r=await sb.auth.getUser();return r.data&&r.data.user?{id:r.data.user.id,email:r.data.user.email}:null},
+    async entrar(email,pass){var r=await sb.auth.signInWithPassword({email:email,password:pass});ok(r);return {id:r.data.user.id,email:r.data.user.email}},
+    async registrar(email,pass){var r=await sb.auth.signUp({email:email,password:pass,options:{emailRedirectTo:location.href.split("#")[0]}});ok(r);return r.data.session?{id:r.data.user.id,email:r.data.user.email}:null},
+    async recordar(email){ok(await sb.auth.resetPasswordForEmail(email,{redirectTo:location.href.split("#")[0]}))},
+    async cambiarClave(pass){ok(await sb.auth.updateUser({password:pass}))},
+    alCambiarSesion(fn){sb.auth.onAuthStateChange(function(ev){fn(ev)})},
+    async salir(){await sb.auth.signOut()},
+    async esAdmin(){var r=await sb.from("admins").select("user_id");return !r.error&&r.data.length>0},
+    async clinicas(){return ok(await sb.from("clinicas").select("*").order("nombre"))},
+    async crearClinica(c){return ok(await sb.from("clinicas").insert(c).select().single())},
+    async editarClinica(id,p){return ok(await sb.from("clinicas").update(p).eq("id",id).select().single())},
+    async unirse(codigo){return ok(await sb.rpc("unirse_a_clinica",{codigo:codigo}))},
+    async todo(tabla,cid){
+      var out=[],from=0,step=1000;
+      while(true){var r=ok(await sb.from(tabla).select("*").eq("clinica_id",cid).range(from,from+step-1));out=out.concat(r);if(r.length<step)break;from+=step}
+      return out;
+    },
+    async insertar(tabla,filas){var out=[];for(var i=0;i<filas.length;i+=500){out=out.concat(ok(await sb.from(tabla).insert(filas.slice(i,i+500)).select()))}return out},
+    async fusionarPacientes(filas){var n=0;for(var i=0;i<filas.length;i+=500){var r=ok(await sb.from("pacientes").upsert(filas.slice(i,i+500),{onConflict:"clinica_id,telefono"}).select("id"));n+=r.length}return n},
+    async editar(tabla,id,p){return ok(await sb.from(tabla).update(p).eq("id",id).select().single())},
+    async borrar(tabla,id){ok(await sb.from(tabla).delete().eq("id",id))},
+    async borrarTodo(tabla,cid){ok(await sb.from(tabla).delete().eq("clinica_id",cid))},
+    async decision(cid,mes){var r=ok(await sb.from("decisiones").select("texto").eq("clinica_id",cid).eq("mes",mes));return r.length?r[0].texto:""},
+    async guardarDecision(cid,mes,texto){ok(await sb.from("decisiones").upsert({clinica_id:cid,mes:mes,texto:texto},{onConflict:"clinica_id,mes"}))}
+  };
+}
+
+/* ---------------- Demo en el navegador ---------------- */
+/* Los mismos valores por defecto que pone la base de datos real */
+var DEFECTO={
+  presupuestos:{telefono:"",tratamiento:"",importe:0,profesional:"",estado:"pendiente",seguimientos:0,ts_seg:null,aceptado_en:null,notas:""},
+  resenas:{pedida_en:null},
+  llamadas:{nombre:"",tipo:"",estado:"pendiente",importe:0,notas:""},
+  citas:{telefono:"",motivo:"",profesional:"",estado:"pendiente",avisada_en:null},
+  espera:{preferencia:"",estado:"esperando",avisado_en:null},
+  socios:{telefono:"",plan:"",cuota:0,sesiones_mes:0,usadas:0,estado:"activo",avisado_en:null,notas:""},
+  reposiciones:{dias:30,precio:0,avisado_en:null,estado:"activo"},
+  cobros:{telefono:"",concepto:"",importe:0,estado:"pendiente",avisos:0,ts_aviso:null,pagado_en:null},
+  recomendaciones:{pedida_en:null},
+  resultados:{importe:0,detalle:""}
+};
+function DemoDB(){
+  var KEY="panel-vuelven-demo-v2",S=null;
+  function guardar(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+  function cargar(){try{var t=localStorage.getItem(KEY);if(t)return JSON.parse(t)}catch(e){}return null}
+  function semilla(){
+    var nombres=["Marta","Jordi","Laura","Sergio","Nuria","Carlos","Anna","Pablo","Lucía","Marc","Elena","David","Cristina","Javier","Sara","Albert","Paula","Raúl","Montse","Iván","Irene","Óscar","Silvia","Adrián","Rosa"];
+    var apellidos=["Ruiz","Puig","Gómez","Martín","García","López","Vidal","Sánchez","Fernández","Soler","Torres","Romero","Navarro","Moreno","Castillo","Ferrer","Ortega","Díaz","Serra","Molina","Blanco","Rubio","Pons"];
+    var seed=17;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280}
+    function nombre(i){return nombres[i%nombres.length]+" "+apellidos[(i*7)%apellidos.length]}
+    function tel(i){return "6000"+String(10000+i).slice(-5)}
+    var c1={id:"demo-dental",nombre:"Clínica Dental Ejemplo",tipo:"den",firma:"Laura, de la clínica",ticket:70,enlace_resena:"https://g.page/r/ejemplo/review",meses_dormido:6,max_meses:60,lote:25,dias_oleada:5,plantillas:{},codigo_alta:"DEMO123456",activa:true,plan:"completo",modulos:{},ciclo_meses:6,telefono:"931234567"};
+    var c2={id:"demo-vet",nombre:"Veterinaria Ejemplo",tipo:"vet",firma:"Marc, de la clínica",ticket:65,enlace_resena:"",meses_dormido:13,max_meses:36,lote:40,dias_oleada:5,plantillas:{},codigo_alta:"DEMO654321",activa:true,plan:"basico",modulos:{},ciclo_meses:12,telefono:""};
+    var t={};TABLAS.forEach(function(n){t[n]=[]});
+    var now=new Date();
+    for(var i=0;i<900;i++){
+      var m=Math.floor(rnd()*66),d=new Date(now.getFullYear(),now.getMonth()-m,1+Math.floor(rnd()*27));
+      t.pacientes.push({id:uid(),clinica_id:c1.id,nombre:nombre(i),telefono:tel(i),mascota:"",ultima_visita:d.toISOString().slice(0,10),estado:"",ola:0,ts_ola:null,ts:null});
+    }
+    // parte de la campaña ya hecha
+    var dorm=t.pacientes.filter(function(p){var mm=(now-new Date(p.ultima_visita))/DAY/30.4;return mm>=6&&mm<=60}).sort(function(a,b){return b.ultima_visita<a.ultima_visita?-1:1});
+    var est=["enviado", "enviado", "contesto", "enviado", "enviado", "cita", "enviado", "enviado", "vino", "enviado", "enviado", "baja", "enviado", "enviado", "contesto", "enviado", "enviado", "enviado", "enviado", "contesto", "enviado", "enviado", "sinwa", "enviado", "enviado"];
+    for(var k=0;k<Math.min(240,dorm.length);k++){var p=dorm[k],dd=12-Math.floor(k/30);p.estado=est[(k*7)%est.length];p.ola=(k<90&&p.estado==="enviado")?2:1;p.ts_ola=tsAgo(Math.max(0,p.ola===2?dd-5:dd));p.ts=p.ts_ola}
+    var trat=[["Implantes",2400],["Ortodoncia invisible",3200],["Endodoncia y corona",780],["Blanqueamiento",350],["Carillas",1900],["Periodoncia",650],["Prótesis",1500]];
+    var prof=["Dra. Soler","Dr. Vidal","Dra. Pons"];
+    for(var j=0;j<34;j++){
+      var tr=trat[j%trat.length],dias=Math.floor(rnd()*70),estado=j%8===0?"aceptado":(j%11===0?"rechazado":"pendiente");
+      var hechos=dias>=60?4:dias>=21?3:dias>=7?2:dias>=2?1:0,seg=estado!=="pendiente"?Math.min(2,hechos):(j%4===0?Math.max(0,hechos-1):hechos);
+      var ultimo=seg?[2,7,21,60][seg-1]:0;
+      t.presupuestos.push({id:uid(),clinica_id:c1.id,nombre:nombre(200+j),telefono:tel(2000+j),tratamiento:tr[0],importe:tr[1],profesional:prof[j%3],fecha:hoyISO(dias),estado:estado,seguimientos:seg,ts_seg:seg?tsAgo(Math.max(1,dias-ultimo)):null,aceptado_en:estado==="aceptado"?hoyISO(Math.min(dias,5+j)):null,notas:""});
+    }
+    for(var r=0;r<14;r++){t.resenas.push({id:uid(),clinica_id:c1.id,nombre:nombre(400+r),telefono:tel(4000+r),fecha:hoyISO(r<6?1:Math.floor(r/2)),pedida_en:r>=6?tsAgo(Math.floor(r/2)-1):null})}
+    var tipos=["nuevo","actual","nuevo","","proveedor","nuevo"],estados=["pendiente","pendiente","whatsapp","cita","nada","cita"];
+    for(var l=0;l<16;l++){t.llamadas.push({id:uid(),clinica_id:c1.id,telefono:tel(6000+l),nombre:l%3===0?nombre(600+l):"",recibida:tsAgo(Math.floor(l/3),l%8),tipo:l<3?"":tipos[l%6],estado:l<3?"pendiente":estados[l%6],importe:estados[l%6]==="cita"?70:0,notas:""})}
+    // Citas sin huecos: mañana y pasado, dos anuladas, algunas ya pasadas
+    var motivos=["Revisión","Limpieza","Empaste","Revisión de ortodoncia","Primera visita","Endodoncia"],horas=[9,9.5,10,11,12,12.5,16,17,17.5,18.5];
+    function cita(dia,hora){var d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+dia,Math.floor(hora),hora%1?30:0);return d.toISOString()}
+    for(var ci=0;ci<20;ci++){var dia=ci<10?1:2,ho=horas[ci%10];var e="pendiente",av=null;if(ci===3||ci===14){e="cancelada"}else if(ci%4===1){e="confirmada";av=tsAgo(0,2)}
+      t.citas.push({id:uid(),clinica_id:c1.id,nombre:nombre(700+ci),telefono:tel(7000+ci),cuando:cita(dia,ho),motivo:motivos[ci%6],profesional:prof[ci%3],estado:e,avisada_en:av})}
+    for(var cp=0;cp<26;cp++){var dd2=-(1+Math.floor(cp/4));t.citas.push({id:uid(),clinica_id:c1.id,nombre:nombre(760+cp),telefono:tel(7600+cp),cuando:cita(dd2,horas[cp%10]),motivo:motivos[cp%6],profesional:prof[cp%3],estado:cp<3?"confirmada":(cp%9===4?"no_vino":"vino"),avisada_en:tsAgo(-dd2+1)})}
+    ["Mañanas","Cualquier tarde","Lunes o miércoles","Lo antes posible","Viernes"].forEach(function(pref,i){t.espera.push({id:uid(),clinica_id:c1.id,nombre:nombre(800+i),telefono:tel(8000+i),preferencia:pref,estado:"esperando",avisado_en:null})});
+    // Club de socios
+    for(var so=0;so<22;so++){var fam=so%3===0,dPago=1+(so*5)%28,prox=new Date(now.getFullYear(),now.getMonth()+(dPago<=now.getDate()?1:0),dPago);if(so<4)prox=new Date(now.getFullYear(),now.getMonth(),now.getDate()-so);
+      t.socios.push({id:uid(),clinica_id:c1.id,nombre:nombre(820+so),telefono:tel(8200+so),plan:fam?"Plan Familia":"Plan Sonrisa",cuota:fam?29:15,alta:hoyISO(40+so*9),proximo_cobro:isoLocal(prox),sesiones_mes:0,usadas:0,estado:so===21?"pausa":"activo",avisado_en:null,notas:""})}
+    // Reposición de productos
+    [["Cabezales de cepillo eléctrico",90,18,88],["Colutorio",45,9,43],["Cabezales de cepillo eléctrico",90,18,86],["Colutorio",45,9,20],["Cabezales de cepillo eléctrico",90,18,31],["Colutorio",45,9,12],["Cabezales de cepillo eléctrico",90,18,60],["Colutorio",45,9,44],["Seda dental",30,4,5]].forEach(function(x,i){t.reposiciones.push({id:uid(),clinica_id:c1.id,nombre:nombre(860+i),telefono:tel(8600+i),producto:x[0],dias:x[1],precio:x[2],ultima_compra:hoyISO(x[3]),avisado_en:null,estado:"activo"})});
+    // Cobros pendientes
+    [["Segunda cuota de ortodoncia",180,12,0,null],["Empaste",65,9,1,8],["Corona",420,25,2,9],["Limpieza",55,3,0,null],["Blanqueamiento",350,-6,0,null],["Endodoncia",290,40,3,20]].forEach(function(x,i){t.cobros.push({id:uid(),clinica_id:c1.id,nombre:nombre(880+i),telefono:tel(8800+i),concepto:x[0],importe:x[1],vence:hoyISO(x[2]),estado:"pendiente",avisos:x[3],ts_aviso:x[4]==null?null:tsAgo(x[4]),pagado_en:null})});
+    // Recomendaciones
+    for(var rc=0;rc<7;rc++){t.recomendaciones.push({id:uid(),clinica_id:c1.id,nombre:nombre(900+rc),telefono:tel(9000+rc),fecha:hoyISO(rc*3),pedida_en:rc<4?null:tsAgo(rc*2)})}
+    // Lo que ya han traído este mes las herramientas nuevas
+    var md=Math.max(1,now.getDate()-1);function fMes(i){return isoLocal(new Date(now.getFullYear(),now.getMonth(),1+(i*3)%md))}
+    [["citas",70,"Hueco rellenado: "+nombre(930)],["citas",70,"Hueco rellenado: "+nombre(931)],["citas",70,"Hueco rellenado: "+nombre(932)],
+     ["revisiones",70,"Revisión: "+nombre(933)],["revisiones",70,"Revisión: "+nombre(934)],["revisiones",70,"Revisión: "+nombre(935)],["revisiones",70,"Revisión: "+nombre(936)],["revisiones",70,"Revisión: "+nombre(937)],
+     ["reposicion",18,"Cabezales: "+nombre(938)],["reposicion",9,"Colutorio: "+nombre(939)],["reposicion",18,"Cabezales: "+nombre(940)],["reposicion",9,"Colutorio: "+nombre(941)],["reposicion",18,"Cabezales: "+nombre(942)],
+     ["cobros",180,"Cuota de ortodoncia: "+nombre(943)],["cobros",95,"Empaste: "+nombre(944)],
+     ["recomendaciones",70,nombre(945)+" (recomendado por "+nombre(946)+")"],["recomendaciones",70,nombre(947)+" (recomendado por "+nombre(948)+")"]].forEach(function(x,i){t.resultados.push({id:uid(),clinica_id:c1.id,modulo:x[0],fecha:fMes(i),importe:x[1],detalle:x[2]})});
+    t.socios.filter(function(s){return s.estado==="activo"&&s.proximo_cobro.slice(0,7)>isoLocal(now).slice(0,7)}).forEach(function(s,i){t.resultados.push({id:uid(),clinica_id:c1.id,modulo:"club",fecha:fMes(i+2),importe:s.cuota,detalle:s.plan+": "+s.nombre})});
+    return {usuario:{id:"demo",email:"demo@vuelven"},admin:true,clinicas:[c1,c2],t:t,decisiones:{}};
+  }
+  S=cargar();
+  function tabla(n){S.t[n]=S.t[n]||[];return S.t[n]}
+  return {
+    demo:true,
+    async usuario(){return S?S.usuario:null},
+    async entrar(){S=S||semilla();guardar();return S.usuario},
+    async registrar(){return this.entrar()},
+    async recordar(){},
+    async cambiarClave(){},
+    alCambiarSesion(){},
+    async salir(){},
+    async esAdmin(){return true},
+    async clinicas(){S=S||semilla();guardar();return S.clinicas.slice()},
+    async crearClinica(c){var n=Object.assign({id:uid(),plan:"completo",modulos:{},ciclo_meses:6,telefono:"",firma:"",ticket:70,enlace_resena:"",meses_dormido:6,max_meses:60,lote:40,dias_oleada:5,plantillas:{},codigo_alta:Math.random().toString(36).slice(2,12).toUpperCase(),activa:true},c);S.clinicas.push(n);guardar();return n},
+    async editarClinica(id,p){var c=S.clinicas.find(function(x){return x.id===id});Object.assign(c,p);guardar();return c},
+    async unirse(){return S.clinicas[0].id},
+    async todo(t,cid){return tabla(t).filter(function(x){return x.clinica_id===cid}).map(function(x){return Object.assign({},x)})},
+    async insertar(t,filas){var out=filas.map(function(f){return Object.assign({id:uid()},DEFECTO[t]||{},f)});S.t[t]=tabla(t).concat(out);guardar();return out},
+    async fusionarPacientes(filas){var idx={};tabla("pacientes").forEach(function(p){idx[p.clinica_id+"|"+p.telefono]=p});
+      filas.forEach(function(f){var k=f.clinica_id+"|"+f.telefono;if(idx[k])Object.assign(idx[k],f);else{var n=Object.assign({id:uid(),estado:"",ola:0,ts_ola:null,ts:null},f);S.t.pacientes.push(n);idx[k]=n}});guardar();return filas.length},
+    async editar(t,id,p){var x=tabla(t).find(function(r){return r.id===id});Object.assign(x,p);guardar();return Object.assign({},x)},
+    async borrar(t,id){S.t[t]=tabla(t).filter(function(r){return r.id!==id});guardar()},
+    async borrarTodo(t,cid){S.t[t]=tabla(t).filter(function(r){return r.clinica_id!==cid});guardar()},
+    async decision(cid,mes){return S.decisiones[cid+"|"+mes]||""},
+    async guardarDecision(cid,mes,texto){S.decisiones[cid+"|"+mes]=texto;guardar()},
+    reiniciar(){S=semilla();guardar()}
+  };
+}
+
+window.PanelDatos={
+  crear:function(){
+    var cfg=window.PANEL_CONFIG;
+    if(cfg&&cfg.url&&cfg.clave&&window.supabase)return SupaDB(cfg);
+    return DemoDB();
+  },
+  TABLAS:TABLAS
+};
+})();
+
+</script>
+<script>
+/* Panel VUELVEN v2 — el programa de la clínica, una herramienta por color */
+(function(){
+"use strict";
+var DB=null,U=null,ADMIN=false,CLIN=[],C=null,VISTA="inicio";
+var TABLAS=["pacientes","presupuestos","resenas","llamadas","citas","espera","socios","reposiciones","cobros","recomendaciones","resultados"];
+var D={};TABLAS.forEach(function(t){D[t]=[]});
+var DAY=86400000,SEG_DIAS=[2,7,21,60],main,$=function(id){return document.getElementById(id)};
+
+/* ================= utilidades ================= */
+function h(tag,props){var el=document.createElement(tag);if(props)for(var k in props){var v=props[k];if(v==null||v===false)continue;
+  if(k==="class")el.className=v;else if(k==="text")el.textContent=v;else if(k.slice(0,2)==="on")el.addEventListener(k.slice(2),v);else if(v===true)el.setAttribute(k,"");else el.setAttribute(k,v)}
+  for(var i=2;i<arguments.length;i++)add(el,arguments[i]);return el}
+function add(el,c){if(c==null||c===false)return;if(Array.isArray(c)){c.forEach(function(x){add(el,x)});return}el.append(c.nodeType?c:document.createTextNode(String(c)))}
+function toast(t){var el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){el.hidden=true},2800)}
+function num(n){return String(Math.round(n||0)).replace(/\B(?=(\d{3})+(?!\d))/g,".")}
+function eur(n){return num(n)+" €"}
+function pct(a,b){return b?(a/b*100).toFixed(1).replace(".",",")+" %":"—"}
+var MESES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+var DIAS=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+function isoDia(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function hoyISO(off){return isoDia(new Date(Date.now()+(off||0)*DAY))}
+function mesISO(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}
+function mesDe(iso){return iso?String(iso).slice(0,7):""}
+function fechaCorta(iso){if(!iso)return "";var d=new Date(String(iso).length===10?iso+"T12:00:00":iso);return d.toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit",year:"2-digit"})}
+function horaCorta(iso){var d=new Date(iso);return d.toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}
+function diaHora(iso){var d=new Date(iso);return DIAS[d.getDay()]+" "+d.getDate()+" a las "+d.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}
+function diasDesde(iso){return iso?Math.floor((Date.now()-new Date(String(iso).length===10?iso+"T12:00:00":iso).getTime())/DAY):1e9}
+function mesesDesde(iso){var d=new Date(iso),n=new Date();return (n.getFullYear()-d.getFullYear())*12+(n.getMonth()-d.getMonth())-(n.getDate()<d.getDate()?1:0)}
+function cuando(iso){var d=new Date(iso),n=new Date(),m=MESES[d.getMonth()];return d.getFullYear()===n.getFullYear()?"en "+m:"en "+m+" de "+d.getFullYear()}
+function nombrePila(n){n=String(n||"").trim();if(!n)return "";if(n.indexOf(",")>0)n=n.split(",")[1].trim();var f=n.split(/\s+/)[0];return f.charAt(0).toUpperCase()+f.slice(1).toLowerCase()}
+function esHoy(iso){return !!iso&&new Date(iso).toDateString()===new Date().toDateString()}
+function telFmt(t){return String(t||"").replace(/^(\d{3})(\d{2})(\d{2})(\d{2})$/,"$1 $2 $3 $4")}
+function normTel(v){var d=String(v||"").replace(/\D/g,"");if(d.indexOf("0034")===0)d=d.slice(4);else if(d.length===11&&d.indexOf("34")===0)d=d.slice(2);
+  if(d.length!==9)return {ok:false,tipo:"malo",n:d};return /^[67]/.test(d)?{ok:true,tipo:"movil",n:d}:{ok:false,tipo:"fijo",n:d}}
+function parseFecha(v){if(v instanceof Date&&!isNaN(v))return v;if(typeof v==="number"&&v>20000&&v<80000)return new Date(Math.round((v-25569)*DAY));
+  var s=String(v||"").trim(),m;if(!s)return null;if((m=s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/)))return new Date(+m[1],+m[2]-1,+m[3]);
+  if((m=s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{2,4})/))){var y=+m[3];if(y<100)y+=2000;return new Date(y,+m[2]-1,+m[1])}return null}
+function parseImporte(v){if(typeof v==="number")return v;var s=String(v||"").replace(/[€\s]/g,"");if(/,\d{1,2}$/.test(s))s=s.replace(/\./g,"").replace(",",".");else s=s.replace(/,/g,"");var n=parseFloat(s);return isNaN(n)?0:n}
+function sumar(a,f){return a.reduce(function(x,y){return x+(+y[f]||0)},0)}
+function copiar(texto,nodo){navigator.clipboard.writeText(texto).then(function(){toast("Copiado")},function(){if(nodo){var r=document.createRange();r.selectNodeContents(nodo);var s=getSelection();s.removeAllRanges();s.addRange(r)}toast("Selecciónalo y cópialo")})}
+function descargar(nombre,texto){var b=new Blob(["﻿"+texto],{type:"text/csv;charset=utf-8"});var a=h("a",{href:URL.createObjectURL(b),download:nombre});document.body.append(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000)}
+function csv(filas){return filas.map(function(r){return r.map(function(x){x=x==null?"":String(x);return /[;"\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x}).join(";")}).join("\n")}
+async function hacer(fn,okMsg){try{var r=await fn();if(okMsg)toast(okMsg);return r}catch(e){toast("No se ha podido guardar: "+(e&&e.message||e));throw e}}
+function P(){return C&&C.tipo==="vet"?"clientes":"pacientes"}
+
+/* ================= plantillas ================= */
+var DEF={
+ den:{meses:6,max:60,ciclo:6,ticket:70,d:["Hola {nombre}, soy {firma}. Revisando las fichas he visto que tu última revisión fue {cuando}. Lo recomendable es cada 6 meses. ¿Te busco hueco esta semana o la próxima? Si prefieres no recibir estos avisos, contesta BAJA.","Hola {nombre}, te escribí hace unos días por tu revisión pendiente. Si te va mejor por la tarde o en otro día, dímelo y lo miro. Para no recibir más avisos, responde BAJA.","Hola {nombre}, último aviso de {centro} sobre tu revisión: si quieres que te guardemos hora, contesta a este mensaje y te llamamos. Si no, no te molestamos más. Para no recibir más avisos, responde BAJA."],
+   planes:[["Plan Sonrisa",15,0],["Plan Familia",29,0]],productos:[["Cabezales de cepillo eléctrico",90,18],["Colutorio",45,9]]},
+ est:{meses:4,max:24,ciclo:2,ticket:60,d:["Hola {nombre}, soy {firma}. Hace unos meses que no te vemos por {centro} y me he acordado de ti. Esta semana tengo algún hueco libre, ¿te apetece venir? Si prefieres no recibir mensajes, contesta BAJA.","Hola {nombre}, te escribí hace unos días. Si te va mejor otro día u hora, dímelo y te lo busco. Para no recibir más mensajes, responde BAJA.","Hola {nombre}, último mensaje de {centro}: si te apetece volver, contesta y te guardo hora. Si no, no te molestamos más. Para no recibir más mensajes, responde BAJA."],
+   planes:[["Club Facial",79,1],["Club Láser",59,1]],productos:[["Crema de tratamiento",60,45],["Protector solar",45,28]]},
+ fis:{meses:6,max:30,ciclo:3,ticket:40,d:["Hola {nombre}, soy {firma}. Hace {meses} meses de tu última sesión y quería saber qué tal estás. Si te viene bien una sesión de revisión, dime y te busco hueco. Si prefieres no recibir mensajes, contesta BAJA.","Hola {nombre}, te escribí hace unos días desde {centro}. Si quieres pasar a revisión y te va mejor otro día u hora, dímelo. Para no recibir más mensajes, responde BAJA.","Hola {nombre}, último mensaje de {centro}: si quieres una sesión, contesta y te guardo hora. Si no, no te molestamos más. Para no recibir más mensajes, responde BAJA."],
+   planes:[["Mantenimiento mensual",45,1],["Deportista",85,2]],productos:[["Cinta de kinesio",60,12],["Crema de masaje",60,15]]},
+ vet:{meses:13,max:36,ciclo:12,ticket:65,d:["Hola {nombre}, soy {firma}. A {mascota} le tocaba la revisión anual y no lo vemos desde {cuando}. ¿Te busco hueco esta semana? Si prefieres no recibir estos avisos, contesta BAJA.","Hola {nombre}, te escribí hace unos días por la revisión de {mascota}. Si te va mejor otro día u hora, dímelo y lo miro. Para no recibir más avisos, responde BAJA.","Hola {nombre}, último aviso de {centro} por la vacuna de {mascota}: si quieres que le guardemos hora, contesta a este mensaje. Si no, no te molestamos más. Para no recibir más avisos, responde BAJA."],
+   planes:[["Plan Salud Adulto",22,0],["Plan Salud Cachorro",25,0],["Plan Salud Sénior",29,0]],productos:[["Pienso",35,55],["Antiparasitario",30,24]]},
+ otro:{meses:6,max:30,ciclo:6,ticket:50,d:["Hola {nombre}, soy {firma}. Hace unos meses que no te vemos por {centro}. ¿Te guardo un hueco esta semana? Si prefieres no recibir mensajes, contesta BAJA.","Hola {nombre}, te escribí hace unos días. Si te va mejor otro día u hora, dímelo y lo miro. Para no recibir más mensajes, responde BAJA.","Hola {nombre}, último mensaje de {centro}: si quieres volver, contesta y te guardo hora. Si no, no te molestamos más. Para no recibir más mensajes, responde BAJA."],
+   planes:[["Cuota mensual",39,1]],productos:[["Producto",30,20]]}
+};
+var MSG={
+ p1:"Hola {nombre}, soy {firma}. ¿Te quedó alguna duda del presupuesto de {tratamiento} que te preparó {profesional}? Estoy aquí para lo que necesites. Si prefieres que no te escribamos, dímelo.",
+ p2:"Hola {nombre}, te escribe {firma}. Si quieres, te reservo 15 minutos con {profesional} para repasar tu presupuesto con calma, sin coste. ¿Te va bien esta semana? Si prefieres que no te escribamos, dímelo.",
+ p3:"Hola {nombre}, soy {firma}. Por si te ayuda: el presupuesto se puede pagar a plazos y te calculamos la cuota. ¿Quieres que te lo mire? Si prefieres que no te escribamos, dímelo.",
+ p4:"Hola {nombre}, soy {firma}. Solo quería decirte que tu presupuesto sigue a tu disposición para cuando lo necesites. No te molestamos más; escríbenos cuando quieras.",
+ r:"Hola {nombre}, soy {firma}. Gracias por venir a {centro}. Nos ayudaría mucho tu opinión en Google, sea la que sea: {enlace} ¡Gracias!",
+ l:"Hola, soy {firma}. Hemos visto que nos has llamado y no hemos podido cogerlo. ¿En qué te podemos ayudar? Si quieres cita, dime qué día te va bien.",
+ c:"Hola {nombre}, soy {firma}. Te recordamos tu cita en {centro} el {cita}. ¿Nos confirmas que vienes? Si no puedes, avísanos y se la damos a otra persona que la está esperando.",
+ e:"Hola {nombre}, soy {firma}. Se nos ha quedado libre un hueco el {cita}. ¿Lo quieres? Contesta a este mensaje y es tuyo.",
+ v:"Hola {nombre}, soy {firma}. Ya te toca la revisión: la última fue {cuando}. ¿Te busco hueco estas semanas? Si prefieres no recibir estos avisos, contesta BAJA.",
+ rp:"Hola {nombre}, soy {firma}. Por nuestras cuentas se te estará acabando {producto}. ¿Te lo preparamos para que pases a recogerlo cuando te venga bien?",
+ so:"Hola {nombre}, soy {firma}. Te escribo por la cuota de este mes de tu {plan} ({importe}). Si ya está hecho, ignora este mensaje. Cualquier cosa, aquí estoy.",
+ su:"Hola {nombre}, soy {firma}. Este mes todavía tienes {sesiones} de tu {plan} sin usar. ¿Te busco hueco para que no la pierdas?",
+ co:"Hola {nombre}, soy {firma}. Te escribo por el pago pendiente de {concepto} ({importe}). Si ya lo has hecho, ignora este mensaje. Si te va mejor pagarlo en partes, dímelo y lo vemos.",
+ rc:"Hola {nombre}, soy {firma}. Nos alegra mucho que estés contento con {centro}. Si conoces a alguien a quien podamos ayudar, puedes pasarle nuestro contacto: {telefono}. ¡Gracias por confiar en nosotros!"
+};
+var NOMBRES_MSG=[["d1","Dormidos · mensaje 1"],["d2","Dormidos · mensaje 2"],["d3","Dormidos · mensaje 3"],["v","Revisión que toca"],["c","Confirmar cita"],["e","Hueco libre (lista de espera)"],["p1","Presupuesto · día 2"],["p2","Presupuesto · día 7"],["p3","Presupuesto · día 21"],["p4","Presupuesto · día 60"],["l","Llamada perdida"],["rp","Reposición de producto"],["so","Cuota del club"],["su","Sesiones del club sin usar"],["co","Cobro pendiente"],["r","Pedir reseña"],["rc","Pedir recomendación"]];
+function def(){return DEF[C.tipo]||DEF.otro}
+function plantilla(k){var p=(C&&C.plantillas)||{};if(p[k])return p[k];if(k[0]==="d"&&k.length===2)return def().d[+k[1]-1];return MSG[k]||""}
+function rellenar(t,x){x=x||{};var mas=x.mascota||(C.tipo==="vet"?"tu mascota":"");
+  var quedan=x.sesiones_mes!=null?(x.sesiones_mes-x.usadas):0;
+  var map={nombre:nombrePila(x.nombre),mascota:mas,meses:x.ultima_visita?String(mesesDesde(x.ultima_visita)):"",cuando:x.ultima_visita?cuando(x.ultima_visita):"",centro:C.nombre||"la clínica",firma:C.firma||("el equipo de "+(C.nombre||"la clínica")),
+    tratamiento:x.tratamiento||"tu tratamiento",profesional:x.profesional||"el doctor",enlace:C.enlace_resena||"",telefono:telFmt(C.telefono)||"",cita:x.cuando?diaHora(x.cuando):"",producto:x.producto||"",plan:x.plan||"plan",importe:x.importe!=null?eur(x.importe):(x.cuota!=null?eur(x.cuota):""),
+    sesiones:quedan===1?"1 sesión":quedan+" sesiones",concepto:x.concepto||"tu tratamiento"};
+  return t.replace(/\{(\w+)\}/g,function(m,k){return map[k]!=null?map[k]:m}).replace(/Hola ,/g,"Hola,")}
+
+/* ================= piezas comunes ================= */
+function botonWA(tel,texto,alEnviar){
+  if(!tel)return h("span",{class:"hint"},"Sin móvil");
+  if(DB.demo)return h("button",{type:"button",class:"btn main",onclick:function(){alEnviar();toast("Demo: en la versión real se abre WhatsApp con el mensaje")}},"WhatsApp");
+  return h("a",{class:"btn main",href:"https://wa.me/34"+tel+"?text="+encodeURIComponent(texto),target:"_blank",rel:"noopener",onclick:function(){setTimeout(alEnviar,300)}},"WhatsApp")}
+function btn(txt,fn,cls){return h("button",{type:"button",class:"btn"+(cls?" "+cls:""),onclick:fn},txt)}
+function pill(txt,color){return h("span",{class:"pill"+(color?" "+color:"")},txt)}
+function kpis(items){return h("div",{class:"kpis"},items.map(function(it){return h("div",{class:"kpi"+(it[2]?" "+it[2]:"")},h("b",null,it[1]),h("span",null,it[0]))}))}
+function card(titulo,extra){var c=h("div",{class:"card",style:"margin-top:14px"},h("div",{class:"section-title"},h("h2",null,titulo),extra||null));for(var i=2;i<arguments.length;i++)add(c,arguments[i]);return c}
+function caja(titulo){var d=h("details",{class:"box",style:"margin-top:14px"},h("summary",null,titulo)),inn=h("div",{class:"in"});for(var i=1;i<arguments.length;i++)add(inn,arguments[i]);d.append(inn);return d}
+function item(titulo,meta,cuerpo,botones){return h("div",{class:"item"},h("div",{class:"item-top"},h("strong",null,titulo),meta?h("span",{class:"meta"},meta):null),cuerpo,botones?h("div",{class:"row"},botones):null)}
+function msgBox(t){return h("div",{class:"msg"},t)}
+function vacio(t){return h("p",{class:"empty"},t)}
+function campo(label,el){return h("label",null,label,el)}
+function inp(id,extra){return h("input",Object.assign({id:id},extra||{}))}
+async function guardar(tabla,x,patch,msg){await hacer(function(){return DB.editar(tabla,x.id,patch)},msg);Object.assign(x,patch);pintar()}
+async function nuevo(tabla,filas,msg){var r=await hacer(function(){return DB.insertar(tabla,filas)},msg);D[tabla]=D[tabla].concat(r);pintar();return r}
+async function quitar(tabla,x){await hacer(function(){return DB.borrar(tabla,x.id)});D[tabla]=D[tabla].filter(function(y){return y!==x});pintar()}
+async function resultado(modulo,importe,detalle){var r=await DB.insertar("resultados",[{clinica_id:C.id,modulo:modulo,fecha:hoyISO(),importe:+importe||0,detalle:detalle||""}]);D.resultados=D.resultados.concat(r)}
+function resMes(modulo,mes){return D.resultados.filter(function(r){return r.modulo===modulo&&mesDe(r.fecha)===(mes||mesISO(new Date()))})}
+function lineas(texto){return String(texto||"").replace(/\r/g,"").split("\n").map(function(l){return l.split(/[;\t]/).map(function(x){return x.trim()})}).filter(function(p){return p.join("").length})}
+
+/* ================= herramientas ================= */
+function dormidos(){var a=C.meses_dormido,b=C.max_meses;return D.pacientes.filter(function(p){var m=mesesDesde(p.ultima_visita);p._m=m;return m>=a&&m<=b&&!(p.revision_en&&diasDesde(p.revision_en)<30&&!p.ola)}).sort(function(x,y){return x._m-y._m})}
+function proxOla(p){if(p.estado===""&&(p.ola||0)===0)return 1;if(p.estado==="enviado"&&p.ola>=1&&p.ola<3&&diasDesde(p.ts_ola)>=C.dias_oleada)return p.ola+1;return 0}
+function loteHoy(){var dm=dormidos(),hechos=dm.filter(function(p){return p.ola&&esHoy(p.ts_ola)}).length,libre=Math.max(0,C.lote-hechos);
+  var l3=dm.filter(function(p){return proxOla(p)===3}),l2=dm.filter(function(p){return proxOla(p)===2}),l1=dm.filter(function(p){return proxOla(p)===1});return {lista:l3.concat(l2,l1).slice(0,libre),hechos:hechos,dorm:dm}}
+function revisionesHoy(){var c=C.ciclo_meses||6;return D.pacientes.filter(function(p){var m=mesesDesde(p.ultima_visita);return m>=c-1&&m<=c+1&&!p.ola&&p.estado===""&&(!p.revision_en||diasDesde(p.revision_en)>60)}).sort(function(a,b){return a.ultima_visita<b.ultima_visita?-1:1})}
+function presuTocaHoy(p){if(p.estado!=="pendiente"||p.seguimientos>=4)return false;if(p.ts_seg&&esHoy(p.ts_seg))return false;return diasDesde(p.fecha)>=SEG_DIAS[p.seguimientos]}
+function citasPorConfirmar(){var ahora=Date.now();return D.citas.filter(function(c){var t=new Date(c.cuando).getTime();return c.estado==="pendiente"&&!c.avisada_en&&t>ahora&&t-ahora<=2.2*DAY}).sort(function(a,b){return a.cuando<b.cuando?-1:1})}
+function citasPasadas(){var ahora=Date.now();return D.citas.filter(function(c){return (c.estado==="pendiente"||c.estado==="confirmada")&&new Date(c.cuando).getTime()<ahora}).sort(function(a,b){return a.cuando<b.cuando?-1:1})}
+function huecosLibres(){var ahora=Date.now();return D.citas.filter(function(c){return c.estado==="cancelada"&&new Date(c.cuando).getTime()>ahora&&!/hueco rellenado|se deja libre/.test(c.motivo||"")}).sort(function(a,b){return a.cuando<b.cuando?-1:1})}
+function reposHoy(){return D.reposiciones.filter(function(r){return r.estado==="activo"&&diasDesde(r.ultima_compra)>=r.dias-5&&(!r.avisado_en||r.avisado_en.slice(0,10)<r.ultima_compra)})}
+function cuotasHoy(){return D.socios.filter(function(s){return s.estado==="activo"&&s.proximo_cobro<=hoyISO()})}
+function sesionesSinUsar(){var d=new Date().getDate();return D.socios.filter(function(s){return s.estado==="activo"&&s.sesiones_mes>s.usadas&&d>=15&&(!s.avisado_en||mesDe(s.avisado_en)!==mesISO(new Date()))})}
+function cobrosHoy(){return D.cobros.filter(function(c){return c.estado==="pendiente"&&c.vence<=hoyISO()&&c.avisos<3&&(!c.ts_aviso||diasDesde(c.ts_aviso)>=7)})}
+function resenaPorPedir(r){return !r.pedida_en&&diasDesde(r.fecha)<=7}
+function recoPorPedir(r){return !r.pedida_en}
+
+var MODS=[
+ {id:"llamadas",nombre:"Llamadas perdidas",grupo:0,plan:"basico",para:"Quien llamó y no le cogisteis recibe un WhatsApp para que no se vaya a otra clínica.",n:function(){return D.llamadas.filter(function(l){return l.estado==="pendiente"}).length},vista:vLlamadas},
+ {id:"citas",nombre:"Citas sin huecos",grupo:0,plan:"basico",para:"Confirma las citas de mañana y rellena las anulaciones con tu lista de espera.",n:function(){return citasPorConfirmar().length+huecosLibres().length+citasPasadas().length},vista:vCitas},
+ {id:"presupuestos",nombre:"Presupuestos",grupo:0,plan:"basico",para:"Seguimiento de los presupuestos que no se han aceptado, sin descuentos ni presión.",n:function(){return D.presupuestos.filter(presuTocaHoy).length},vista:vPresupuestos},
+ {id:"revisiones",nombre:"Revisiones que tocan",grupo:1,plan:"completo",para:"Avisa a quien le toca volver antes de que se olvide y se quede dormido.",n:function(){return Math.min(revisionesHoy().length,C.lote)},vista:vRevisiones},
+ {id:"dormidos",nombre:"Pacientes dormidos",grupo:1,plan:"basico",para:"Recupera a quien dejó de venir hace meses con tres mensajes personales.",n:function(){return loteHoy().lista.length},vista:vDormidos},
+ {id:"reposicion",nombre:"Reposición de productos",grupo:1,plan:"completo",para:"Avisa cuando a un cliente se le está acabando lo que te compró.",n:function(){return reposHoy().length},vista:vReposicion},
+ {id:"club",nombre:"Club de socios",grupo:2,plan:"completo",para:"Planes con cuota mensual: ingreso fijo cada mes y clientes que no se van.",n:function(){return cuotasHoy().length+sesionesSinUsar().length},vista:vClub},
+ {id:"cobros",nombre:"Cobros pendientes",grupo:2,plan:"completo",para:"Recuerda con buenas maneras lo que te deben, sin tener que llamar tú.",n:function(){return cobrosHoy().length},vista:vCobros},
+ {id:"resenas",nombre:"Reseñas de Google",grupo:3,plan:"basico",para:"Pide la reseña a todos al día siguiente. Más reseñas, más clientes nuevos.",n:function(){return D.resenas.filter(resenaPorPedir).length},vista:vResenas},
+ {id:"recomendaciones",nombre:"Recomendaciones",grupo:3,plan:"completo",para:"Pide a tus mejores clientes que te recomienden y apunta quién te trae a quién.",n:function(){return D.recomendaciones.filter(recoPorPedir).length},vista:vRecomendaciones},
+ {id:"informe",nombre:"Informe del mes",grupo:4,plan:"basico",para:"Todo el dinero que han traído estas herramientas, sumado.",n:function(){return 0},vista:vInforme}
+];
+var GRUPOS=["Que no se escape nadie","Que vuelvan","Ingresos fijos y cobros","Que te recomienden","Tus números"];
+function modVisible(m){if(!C||!m)return false;if(m.plan==="completo"&&C.plan==="basico")return false;return !(C.modulos&&C.modulos[m.id]===false)}
+function modDe(id){return MODS.filter(function(m){return m.id===id})[0]}
+
+/* ================= pintar ================= */
+function irA(v){VISTA=v;try{localStorage.setItem("panel-vuelven-vista",v)}catch(e){}pintar();window.scrollTo(0,0)}
+function pintar(){
+  if(!C)VISTA="clinicas";
+  var bar=$("tabs");bar.innerHTML="";bar.className="chips";
+  if(C){bar.append(h("button",{type:"button",class:"chip","aria-current":VISTA==="inicio"?"true":"false",onclick:function(){irA("inicio")}},"Inicio"));
+    MODS.filter(modVisible).forEach(function(m){var n=m.n();bar.append(h("button",{type:"button",class:"chip m-"+m.id,"aria-current":VISTA===m.id?"true":"false",onclick:function(){irA(m.id)}},m.nombre,n?h("span",{class:"n"},n):null))});
+    bar.append(h("button",{type:"button",class:"chip m-ajustes","aria-current":VISTA==="ajustes"?"true":"false",onclick:function(){irA("ajustes")}},"Ajustes"))}
+  if(ADMIN)bar.append(h("button",{type:"button",class:"chip m-clinicas","aria-current":VISTA==="clinicas"?"true":"false",onclick:function(){irA("clinicas")}},"Clínicas"));
+  main.innerHTML="";main.className="";
+  if(VISTA==="inicio")return vInicio();
+  if(VISTA==="ajustes")return envolver("ajustes","Ajustes","Los datos de la clínica, los mensajes y quién tiene acceso.",0,vAjustes);
+  if(VISTA==="clinicas")return envolver("clinicas","Clínicas","Solo lo ves tú: alta, plan y baja de cada clínica.",0,vClinicas);
+  var m=modDe(VISTA);if(!modVisible(m)){VISTA="inicio";return vInicio()}
+  envolver(m.id,m.nombre,m.para,m.n(),m.vista);
+}
+function envolver(id,nombre,para,n,fn){
+  main.className="m-"+id;
+  main.append(h("div",{class:"mhead"},h("div",{class:"row"},h("h1",null,nombre),n?h("span",{class:"todo"},n+" por hacer hoy"):h("span",{class:"muted small"},id==="ajustes"||id==="clinicas"||id==="informe"?"":"Nada urgente hoy")),h("p",null,para)));
+  fn();
+}
+
+/* ----- INICIO ----- */
+function vInicio(){
+  var d=new Date(),total=0,visibles=MODS.filter(modVisible);visibles.forEach(function(m){total+=m.n()});
+  var I=calcInforme(mesISO(d));
+  main.append(h("div",{class:"hero"},h("span",{class:"muted"},DIAS[d.getDay()]+" "+d.getDate()+" de "+MESES[d.getMonth()]),h("div",{class:"big"},total?total+" cosas por hacer hoy":"Todo al día"),h("p",{class:"muted"},"Toca una herramienta para ver qué hacer. El número de color es lo pendiente de hoy.")),
+    h("div",{class:"money"},h("span",null,"Este mes estas herramientas han traído"),h("b",null,eur(I.total))));
+  var faltan=[!C.firma?"quién firma los mensajes":null,(!C.enlace_resena&&modVisible(modDe("resenas")))?"el enlace de reseñas de Google":null].filter(Boolean);
+  if(faltan.length)main.append(h("div",{class:"demo-bar"},h("b",null,"Falta configurar: "),faltan.join(" y ")+". ",btn("Ir a Ajustes",function(){irA("ajustes")})));
+  GRUPOS.forEach(function(g,gi){
+    var ms=MODS.filter(function(m){return m.grupo===gi&&modVisible(m)});if(!ms.length)return;
+    main.append(h("div",{class:"grupo"},h("h2",null,g),h("div",{class:"tiles"},ms.map(function(m){var n=m.n();return h("button",{type:"button",class:"tile m-"+m.id,onclick:function(){irA(m.id)}},h("div",{class:"t"},h("strong",null,m.nombre),m.id==="informe"?h("span",{class:"cnt cero"},eur(I.total)):h("span",{class:"cnt"+(n?"":" cero")},n)),h("p",null,m.para))}))));
+  });
+  if(C.plan==="basico"){var bloq=MODS.filter(function(m){return m.plan==="completo"});main.append(h("div",{class:"grupo"},h("h2",null,"Con el plan Completo"),h("div",{class:"tiles"},bloq.map(function(m){return h("div",{class:"tile m-"+m.id,style:"cursor:default;opacity:.75"},h("div",{class:"t"},h("strong",null,m.nombre)),h("p",null,m.para),h("span",{class:"lock"},"Pide a VUELVEN que te lo active"))}))))}
+}
+
+/* ----- LLAMADAS ----- */
+function itemLlamada(l){
+  var t=rellenar(plantilla("l"),{});
+  var tipo=h("select",{"aria-label":"Quién era",style:"width:auto",onchange:function(){guardar("llamadas",l,{tipo:tipo.value})}},[["","¿Quién era?"],["nuevo","Cliente nuevo"],["actual","Cliente actual"],["proveedor","Proveedor"],["spam","Publicidad"]].map(function(o){return h("option",{value:o[0],selected:l.tipo===o[0]},o[1])}));
+  return item((l.nombre?l.nombre+" · ":"")+telFmt(l.telefono),horaCorta(l.recibida),msgBox(t),[botonWA(l.telefono,t,function(){guardar("llamadas",l,{estado:"whatsapp"},"Contestada")}),btn("Le hemos dado cita",function(){guardar("llamadas",l,{estado:"cita",importe:C.ticket},"Cita apuntada: +"+eur(C.ticket))}),btn("No hacía falta",function(){guardar("llamadas",l,{estado:"nada"})}),tipo]);
+}
+var fLla="pendiente";
+function vLlamadas(){
+  var mes=mesISO(new Date()),L=D.llamadas,lm=L.filter(function(l){return mesDe(l.recibida)===mes}),cit=lm.filter(function(l){return l.estado==="cita"});
+  main.append(kpis([["Sin contestar",num(L.filter(function(l){return l.estado==="pendiente"}).length),"bad"],["Perdidas este mes",num(lm.length)],["Convertidas en cita",num(cit.length)+" · "+eur(sumar(cit,"importe")),"good"]]));
+  var sel=h("select",{style:"width:auto","aria-label":"Ver",onchange:function(){fLla=sel.value;pintar()}},[["pendiente","Sin contestar"],["whatsapp","Contestadas"],["cita","Con cita"],["nada","No hacía falta"],["todas","Todas"]].map(function(o){return h("option",{value:o[0],selected:fLla===o[0]},o[1])}));
+  var lista=(fLla==="todas"?L:L.filter(function(l){return l.estado===fLla})).slice().sort(function(a,b){return a.recibida<b.recibida?1:-1}).slice(0,200);
+  main.append(card("Llamadas",sel,lista.length?h("div",{class:"stack"},lista.map(function(l){return l.estado==="pendiente"?itemLlamada(l):item((l.nombre?l.nombre+" · ":"")+telFmt(l.telefono),horaCorta(l.recibida),h("div",{class:"row"},pill({whatsapp:"Contestada",cita:"Cita",nada:"No hacía falta"}[l.estado],l.estado==="cita"?"green":"blue"),l.estado==="cita"?h("span",{class:"meta"},eur(l.importe)):null),[btn("Volver a pendiente",function(){guardar("llamadas",l,{estado:"pendiente"})})])})):vacio("Nada por aquí.")));
+  var tel=inp("lTel",{inputmode:"tel"}),nom=inp("lNom"),cu=inp("lCuando",{type:"datetime-local",value:new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16)});
+  main.append(caja("Apuntar una llamada perdida",h("p",{class:"muted small"},"Más adelante pueden entrar solas desde la centralita."),h("div",{class:"cols"},campo("Móvil",tel),campo("Nombre (si se sabe)",nom),campo("Cuándo",cu)),h("div",null,btn("Apuntar",async function(){var t=normTel(tel.value);if(!t.ok){toast(t.tipo==="fijo"?"Es un fijo: sin WhatsApp. Llámale.":"Móvil no válido");return}await nuevo("llamadas",[{clinica_id:C.id,telefono:t.n,nombre:nom.value.trim(),recibida:new Date(cu.value).toISOString()}],"Llamada apuntada")},"main"))));
+}
+
+/* ----- CITAS SIN HUECOS ----- */
+function vCitas(){
+  var mes=mesISO(new Date()),conf=citasPorConfirmar(),huecos=huecosLibres(),pas=citasPasadas();
+  var prox=D.citas.filter(function(c){return new Date(c.cuando).getTime()>Date.now()&&c.estado!=="cancelada"});
+  var noVino=D.citas.filter(function(c){return c.estado==="no_vino"&&mesDe(c.cuando)===mes}).length,rell=resMes("citas");
+  main.append(kpis([["Próximas citas",num(prox.length)],["Por confirmar (48 h)",num(conf.length),conf.length?"bad":""],["No vinieron este mes",num(noVino)],["Huecos rellenados",num(rell.length)+" · "+eur(sumar(rell,"importe")),"good"]]));
+  main.append(card("1 · Confirmar las citas de mañana y pasado",null,h("p",{class:"muted small"},"Un WhatsApp a cada uno. Si alguien no puede, márcala como anulada y te enseñamos a quién ofrecerle el hueco."),
+    conf.length?h("div",{class:"stack"},conf.map(function(c){var t=rellenar(plantilla("c"),c);return item(c.nombre+(c.motivo?" · "+c.motivo:""),diaHora(c.cuando)+(c.profesional?" · "+c.profesional:""),msgBox(t),[botonWA(c.telefono,t,function(){guardar("citas",c,{avisada_en:new Date().toISOString()},"Aviso enviado")}),btn("Confirmada",function(){guardar("citas",c,{estado:"confirmada",avisada_en:c.avisada_en||new Date().toISOString()})}),btn("Anulada",function(){guardar("citas",c,{estado:"cancelada"},"Hueco libre: mira la lista de espera")},"warn")])})):vacio("No hay citas por confirmar.")));
+  var esperando=D.espera.filter(function(e){return e.estado==="esperando"||e.estado==="avisado"});
+  main.append(card("2 · Huecos libres",null,h("p",{class:"muted small"},"Citas anuladas que todavía no han pasado. Ofrécelas a la lista de espera: el primero que conteste se la queda."),
+    huecos.length?h("div",{class:"stack"},huecos.map(function(c){return item("Hueco del "+diaHora(c.cuando),c.nombre+" la anuló",esperando.length?h("div",{class:"stack"},esperando.slice(0,5).map(function(e){var t=rellenar(plantilla("e"),{nombre:e.nombre,cuando:c.cuando});return h("div",{class:"row"},h("span",null,e.nombre+(e.preferencia?" ("+e.preferencia+")":"")),e.estado==="avisado"?pill("Avisado","blue"):null,botonWA(e.telefono,t,function(){guardar("espera",e,{estado:"avisado",avisado_en:new Date().toISOString()})}),btn("Le doy el hueco",async function(){await hacer(async function(){await DB.editar("espera",e.id,{estado:"citado"});var r=await DB.insertar("citas",[{clinica_id:C.id,nombre:e.nombre,telefono:e.telefono,cuando:c.cuando,motivo:"De la lista de espera",profesional:c.profesional,estado:"confirmada"}]);D.citas=D.citas.concat(r);await DB.editar("citas",c.id,{estado:"cancelada",motivo:(c.motivo?c.motivo+" · ":"")+"hueco rellenado"});await resultado("citas",C.ticket,"Hueco rellenado: "+e.nombre)},"Hueco rellenado: +"+eur(C.ticket));e.estado="citado";c.motivo=(c.motivo?c.motivo+" · ":"")+"hueco rellenado";pintar()}))})):vacio("La lista de espera está vacía. Añade gente abajo."),[btn("Dejarlo libre",function(){guardar("citas",c,{motivo:(c.motivo?c.motivo+" · ":"")+"se deja libre"})})])})):vacio("No hay huecos libres.")));
+  main.append(card("3 · ¿Vinieron?",null,h("p",{class:"muted small"},"Citas que ya han pasado. Así sabes cuántos no vienen."),
+    pas.length?h("div",{class:"stack"},pas.slice(0,30).map(function(c){return item(c.nombre,diaHora(c.cuando),null,[btn("Vino",function(){guardar("citas",c,{estado:"vino"})}),btn("No vino",function(){guardar("citas",c,{estado:"no_vino"})},"warn")])})):vacio("Todo apuntado.")));
+  var ta=h("textarea",{id:"ciLista",placeholder:"Marta Ruiz;612345678;28/09/2026;10:30;Limpieza"});
+  main.append(caja("Añadir citas (copiadas de la agenda)",h("p",{class:"muted small"},"Una línea por cita: nombre; móvil; día; hora; motivo (opcional)."),ta,h("div",null,btn("Añadir citas",async function(){var filas=[];lineas(ta.value).forEach(function(p){if(p.length<4)return;var t=normTel(p[1]),d=parseFecha(p[2]),hm=String(p[3]).match(/(\d{1,2})[:.h](\d{2})/);if(!d||!hm)return;d.setHours(+hm[1],+hm[2],0,0);filas.push({clinica_id:C.id,nombre:p[0],telefono:t.ok?t.n:"",cuando:d.toISOString(),motivo:p[4]||""})});if(!filas.length){toast("No hay líneas válidas");return}await nuevo("citas",filas,filas.length+" citas añadidas");ta.value=""},"main"))));
+  var en=inp("esNom"),et=inp("esTel",{inputmode:"tel"}),ep=inp("esPref",{placeholder:"Mañanas, cualquier día…"});
+  main.append(caja("Lista de espera ("+D.espera.filter(function(e){return e.estado==="esperando"}).length+")",h("div",{class:"cols"},campo("Nombre",en),campo("Móvil",et),campo("Cuándo le va bien",ep)),h("div",null,btn("Añadir a la lista",async function(){var t=normTel(et.value);if(!en.value.trim()||!t.ok){toast("Falta el nombre o el móvil");return}await nuevo("espera",[{clinica_id:C.id,nombre:en.value.trim(),telefono:t.n,preferencia:ep.value.trim()}],"Añadido a la lista de espera")},"main")),
+    h("div",{class:"stack"},D.espera.filter(function(e){return e.estado!=="fuera"&&e.estado!=="citado"}).map(function(e){return item(e.nombre,telFmt(e.telefono),e.preferencia?h("p",{class:"muted small"},e.preferencia):null,[btn("Quitar de la lista",function(){guardar("espera",e,{estado:"fuera"})})])}))));
+}
+
+/* ----- PRESUPUESTOS ----- */
+function itemPresu(p){
+  var k=Math.min(p.seguimientos,3),t=rellenar(plantilla("p"+(k+1)),p),seg=function(){guardar("presupuestos",p,{seguimientos:p.seguimientos+1,ts_seg:new Date().toISOString()},"Seguimiento apuntado")};
+  return item(p.nombre+" · "+p.tratamiento,eur(p.importe)+" · hace "+diasDesde(p.fecha)+" días",[h("div",{class:"row"},pill("Seguimiento "+(p.seguimientos+1)+" de 4","blue"),p.profesional?pill(p.profesional):null),msgBox(t)],
+    [p.telefono?botonWA(p.telefono,t,seg):h("span",{class:"hint"},"Sin móvil: llámale"),btn("Ya contactado",seg),btn("Aceptado",function(){guardar("presupuestos",p,{estado:"aceptado",aceptado_en:hoyISO()},"Aceptado: +"+eur(p.importe))}),btn("No lo hará",function(){guardar("presupuestos",p,{estado:"rechazado"})}),btn("Baja",function(){guardar("presupuestos",p,{estado:"baja"},"No se le volverá a escribir")},"warn")]);
+}
+var fPres="hoy";
+function vPresupuestos(){
+  var Pp=D.presupuestos,mes=mesISO(new Date()),pend=Pp.filter(function(p){return p.estado==="pendiente"}),acM=Pp.filter(function(p){return p.estado==="aceptado"&&mesDe(p.aceptado_en)===mes}),trasSeg=acM.filter(function(p){return p.seguimientos>0});
+  main.append(kpis([["Pendientes",num(pend.length)+" · "+eur(sumar(pend,"importe"))],["Tocan hoy",num(Pp.filter(presuTocaHoy).length)],["Aceptados este mes",num(acM.length)+" · "+eur(sumar(acM,"importe"))],["Gracias al seguimiento",eur(sumar(trasSeg,"importe")),"good"]]));
+  var sel=h("select",{style:"width:auto","aria-label":"Ver",onchange:function(){fPres=sel.value;pintar()}},[["hoy","Tocan hoy"],["pendiente","Todos los pendientes"],["aceptado","Aceptados"],["rechazado","No lo harán"],["baja","Bajas"]].map(function(o){return h("option",{value:o[0],selected:fPres===o[0]},o[1])}));
+  var lista=(fPres==="hoy"?Pp.filter(presuTocaHoy):Pp.filter(function(p){return p.estado===fPres})).slice().sort(function(a,b){return b.importe-a.importe});
+  main.append(card("Seguimiento",sel,h("p",{class:"muted small"},"Se escribe a los 2, 7, 21 y 60 días. Nunca descuentos ni regalos: dudas, repasarlo con el profesional y financiación."),
+    lista.length?h("div",{class:"stack"},lista.map(function(p){if(fPres==="hoy")return itemPresu(p);return item(p.nombre+" · "+p.tratamiento,eur(p.importe)+" · "+fechaCorta(p.fecha),h("div",{class:"row"},pill(p.seguimientos+" seguimientos"),p.aceptado_en?pill("Aceptado el "+fechaCorta(p.aceptado_en),"green"):null),[p.estado!=="aceptado"?btn("Aceptado",function(){guardar("presupuestos",p,{estado:"aceptado",aceptado_en:hoyISO()},"Aceptado")}):null,p.estado!=="pendiente"?btn("Volver a pendiente",function(){guardar("presupuestos",p,{estado:"pendiente",aceptado_en:null})}):null,btn("Borrar",function(){quitar("presupuestos",p)},"warn")])})):vacio(fPres==="hoy"?"Hoy no toca ningún seguimiento.":"Nada por aquí.")));
+  var f={nombre:inp("pNombre"),telefono:inp("pTel",{inputmode:"tel"}),tratamiento:inp("pTrat"),importe:inp("pImp",{inputmode:"decimal"}),profesional:inp("pProf"),fecha:inp("pFecha",{type:"date",value:hoyISO()})};
+  main.append(caja("Añadir un presupuesto",h("div",{class:"cols"},campo(P()==="clientes"?"Nombre del cliente":"Nombre del paciente",f.nombre),campo("Móvil",f.telefono),campo("Tratamiento (en general)",f.tratamiento),campo("Importe (€)",f.importe),campo("Profesional",f.profesional),campo("Fecha",f.fecha)),
+    h("div",null,btn("Añadir",async function(){if(!f.nombre.value.trim()){toast("Falta el nombre");return}var t=normTel(f.telefono.value);await nuevo("presupuestos",[{clinica_id:C.id,nombre:f.nombre.value.trim(),telefono:t.ok?t.n:"",tratamiento:f.tratamiento.value.trim(),importe:parseImporte(f.importe.value),profesional:f.profesional.value.trim(),fecha:f.fecha.value||hoyISO()}],"Presupuesto añadido")},"main"))));
+  main.append(caja("Cargar varios presupuestos (Excel o CSV)",lector([["nombre","Nombre",/nombre|paciente|cliente/i,true],["telefono","Móvil",/m[oó]vil|tel/i,false],["tratamiento","Tratamiento",/trat|concepto|descrip/i,false],["importe","Importe",/importe|total|precio|€/i,true],["profesional","Profesional",/doctor|profesional|dr/i,false],["fecha","Fecha",/fecha|date/i,true]],async function(rows,idx){var filas=[];rows.forEach(function(r){var d=parseFecha(r[idx.fecha]);if(!d)return;var t=idx.telefono>=0?normTel(r[idx.telefono]):{ok:false};filas.push({clinica_id:C.id,nombre:String(r[idx.nombre]||"").trim(),telefono:t.ok?t.n:"",tratamiento:idx.tratamiento>=0?String(r[idx.tratamiento]||"").trim():"",importe:parseImporte(r[idx.importe]),profesional:idx.profesional>=0?String(r[idx.profesional]||"").trim():"",fecha:isoDia(d)})});await nuevo("presupuestos",filas,filas.length+" presupuestos cargados")})));
+}
+
+/* ----- lector de listas ----- */
+function lector(campos,alListo){
+  var raw=null,mapBox=h("div",{class:"stack",hidden:true}),msg=h("p",{class:"muted small"});
+  function partir(texto){var ls=String(texto).replace(/\r/g,"").split("\n").filter(function(l){return l.trim()});if(!ls.length)return [];var hd=ls[0],sep=";",best=-1;[";","\t",","].forEach(function(c){var k=hd.split(c).length;if(k>best){best=k;sep=c}});
+    return ls.map(function(l){var out=[],cur="",q=false;for(var i=0;i<l.length;i++){var ch=l[i];if(ch==='"'){if(q&&l[i+1]==='"'){cur+='"';i++}else q=!q}else if(ch===sep&&!q){out.push(cur);cur=""}else cur+=ch}out.push(cur);return out.map(function(x){return x.trim()})})}
+  function mostrar(rows){rows=(rows||[]).filter(function(r){return r.some(function(c){return String(c).trim()})});if(rows.length<2){msg.textContent="No hay filas: la primera fila tiene que ser la cabecera.";return}
+    raw=rows;var head=rows[0];mapBox.innerHTML="";var cols=h("div",{class:"cols"});
+    campos.forEach(function(f){var sel=h("select",{id:"map_"+f[0]},h("option",{value:"-1"},"(ninguna)"),head.map(function(x,i){return h("option",{value:String(i)},String(x||"Columna "+(i+1)))}));var pick=-1;head.forEach(function(x,i){if(pick<0&&f[2].test(String(x)))pick=i});sel.value=String(pick);cols.append(campo(f[1],sel))});
+    mapBox.append(h("p",{class:"muted small"},"Columnas detectadas. Corrígelas si alguna no es la buena:"),cols,h("div",null,btn("Cargar la lista",aplicar,"main")));mapBox.hidden=false;msg.textContent=(rows.length-1)+" filas leídas."}
+  function aplicar(){var idx={};campos.forEach(function(f){idx[f[0]]=+$("map_"+f[0]).value});var falta=campos.filter(function(f){return f[3]&&idx[f[0]]<0});if(falta.length){msg.textContent="Falta la columna: "+falta.map(function(f){return f[1]}).join(", ");return}mapBox.hidden=true;alListo(raw.slice(1),idx,msg)}
+  var file=h("input",{type:"file",accept:".csv,.txt,.xlsx,.xls",style:"max-width:320px",onchange:function(){var f=file.files&&file.files[0];if(!f)return;
+    if(/\.xlsx?$/i.test(f.name)){if(typeof XLSX==="undefined"){msg.textContent="No se ha podido abrir el Excel. Guárdalo como CSV y cárgalo otra vez.";return}var r=new FileReader();r.onload=function(){try{var wb=XLSX.read(r.result,{type:"array",cellDates:true});mostrar(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true,defval:""}))}catch(e){msg.textContent="El archivo no se ha podido leer."}};r.readAsArrayBuffer(f)}
+    else{var r2=new FileReader();r2.onload=function(){mostrar(partir(r2.result))};r2.readAsText(f)}}});
+  var ta=h("textarea",{placeholder:"Pega aquí la lista copiada de Excel, con la cabecera"});
+  return h("div",{class:"stack"},h("div",{class:"row"},file),h("details",null,h("summary",{class:"muted",style:"cursor:pointer"},"O pegar la lista"),h("div",{class:"stack",style:"margin-top:8px"},ta,h("div",null,btn("Usar lo pegado",function(){mostrar(partir(ta.value))})))),mapBox,msg);
+}
+function cargarPacientes(){
+  return lector([["nombre","Nombre",/nombre|cliente|paciente|propietari|titular|name/i,true],["telefono","Móvil",/m[oó]vil|tel|phone|whats/i,true],["ultima","Fecha de la última visita",/[uú]ltim|fecha|visita|date/i,true],["mascota","Mascota (veterinarias)",/mascota|animal|pet/i,false]],async function(rows,idx,msg){
+    var by={},fijos=0,sinF=0;rows.forEach(function(r){var t=normTel(r[idx.telefono]),d=parseFecha(r[idx.ultima]);if(!t.ok){fijos++;return}if(!d){sinF++;return}var nom=String(r[idx.nombre]||"").trim(),mas=idx.mascota>=0?String(r[idx.mascota]||"").trim():"",e=by[t.n];
+      if(e){if(mas&&e.mascota.indexOf(mas)<0)e.mascota=e.mascota?e.mascota+" y "+mas:mas;if(isoDia(d)>e.ultima_visita)e.ultima_visita=isoDia(d);return}by[t.n]={clinica_id:C.id,nombre:nom,telefono:t.n,mascota:mas,ultima_visita:isoDia(d)}});
+    var filas=Object.keys(by).map(function(k){return by[k]});msg.textContent="Guardando…";await hacer(function(){return DB.fusionarPacientes(filas)});D.pacientes=await DB.todo("pacientes",C.id);pintar();
+    toast("Lista cargada: "+filas.length+" móviles. Fijos o no válidos: "+fijos+". Sin fecha: "+sinF+".")});
+}
+
+/* ----- REVISIONES QUE TOCAN ----- */
+function vRevisiones(){
+  var lista=revisionesHoy(),mes=mesISO(new Date()),env=D.pacientes.filter(function(p){return mesDe(p.revision_en)===mes}).length,res=resMes("revisiones");
+  main.append(kpis([["Les toca revisión",num(lista.length)],["Avisados este mes",num(env)],["Han pedido cita",num(res.length)+" · "+eur(sumar(res,"importe")),"good"]]));
+  var hoy=lista.slice(0,C.lote);
+  main.append(card("Avisar hoy",h("span",{class:"muted small"},"Revisión cada "+C.ciclo_meses+" meses"),h("p",{class:"muted small"},"Salen los que vinieron hace entre "+Math.max(0,C.ciclo_meses-1)+" y "+(C.ciclo_meses+1)+" meses. Se cambia en Ajustes. Usa la misma lista que Pacientes dormidos."),
+    hoy.length?h("div",{class:"stack"},hoy.map(function(p){var t=rellenar(plantilla("v"),p);return item(p.nombre+(p.mascota?" · "+p.mascota:""),telFmt(p.telefono)+" · última visita "+fechaCorta(p.ultima_visita),msgBox(t),[botonWA(p.telefono,t,function(){guardar("pacientes",p,{revision_en:new Date().toISOString()})}),btn("Ya avisado",function(){guardar("pacientes",p,{revision_en:new Date().toISOString()})})])})):vacio(D.pacientes.length?"Hoy no le toca a nadie.":"Primero carga la lista de "+P()+" aquí abajo.")));
+  var avisados=D.pacientes.filter(function(p){return p.revision_en&&diasDesde(p.revision_en)<=30}).sort(function(a,b){return a.revision_en<b.revision_en?1:-1});
+  main.append(card("Avisados en los últimos 30 días",null,avisados.length?h("div",{class:"stack"},avisados.slice(0,50).map(function(p){return item(p.nombre,"avisado el "+fechaCorta(p.revision_en),null,[btn("Ha pedido cita",async function(){await hacer(function(){return resultado("revisiones",C.ticket,"Revisión: "+p.nombre)},"Apuntado: +"+eur(C.ticket));await guardar("pacientes",p,{revision_en:new Date(Date.now()-40*DAY).toISOString(),ultima_visita:hoyISO()})})])})):vacio("Todavía nadie.")));
+  main.append(caja("Cargar o actualizar la lista de "+P(),cargarPacientes()));
+}
+
+/* ----- DORMIDOS ----- */
+var fDorm="hoy";
+function vDormidos(){
+  var L=loteHoy(),dm=L.dorm,n={enviado:0,contesto:0,cita:0,vino:0,baja:0,sinwa:0};dm.forEach(function(p){if(n[p.estado]!==undefined)n[p.estado]++});
+  var alc=dm.filter(function(p){return p.ola&&p.estado!=="sinwa"}).length,resp=n.contesto+n.cita+n.vino+n.baja;
+  main.append(kpis([["En la ficha",num(D.pacientes.length)],["Dormidos",num(dm.length)],["Contactados",num(alc)],["Contestaron",num(resp)+" · "+pct(resp,alc)],["Han vuelto",num(n.vino)+" · "+pct(n.vino,alc),"good"]]));
+  var sel=h("select",{style:"width:auto","aria-label":"Ver",onchange:function(){fDorm=sel.value;pintar()}},[["hoy","Lote de hoy"],["enviado","Sin respuesta"],["contesto","Contestaron"],["cita","Con cita"],["vino","Han vuelto"],["baja","Bajas"],["todos","Todos"]].map(function(o){return h("option",{value:o[0],selected:fDorm===o[0]},o[1])}));
+  var lista=fDorm==="hoy"?L.lista:fDorm==="todos"?dm.slice(0,300):dm.filter(function(p){return p.estado===fDorm});
+  var col={"":"","enviado":"blue","contesto":"amber","cita":"green","vino":"green","baja":"red","sinwa":"red"},lbl={"":"Pendiente","enviado":"Enviado","contesto":"Contestó","cita":"Cita","vino":"Ha vuelto","baja":"Baja","sinwa":"Sin WhatsApp"};
+  main.append(card(fDorm==="hoy"?"Lote de hoy":"Lista",h("div",{class:"row"},h("span",{class:"muted small"},"Hoy: "+Math.min(L.hechos,C.lote)+" de "+C.lote),sel),h("p",{class:"muted small"},"Tres mensajes: el segundo sale a los "+C.dias_oleada+" días si no contestan, y el tercero es el último aviso."),
+    lista.length?h("div",{class:"stack"},lista.map(function(p){var o=proxOla(p),t=rellenar(plantilla("d"+(o||Math.max(1,p.ola||1))),p);
+      function marcar(){if(!o)return;guardar("pacientes",p,{ola:o,estado:"enviado",ts_ola:new Date().toISOString(),ts:new Date().toISOString()})}
+      function est(e){return async function(){var nv=p.estado===e?(p.ola?"enviado":""):e;await guardar("pacientes",p,{estado:nv,ts:new Date().toISOString()});if(nv==="vino"){await resultado("dormidos",C.ticket,"Ha vuelto: "+p.nombre);pintar()}}}
+      return item(p.nombre+(p.mascota?" · "+p.mascota:""),telFmt(p.telefono)+" · "+mesesDesde(p.ultima_visita)+" meses sin venir",[h("div",{class:"row"},pill(lbl[p.estado],col[p.estado]),o?pill("Mensaje "+o,"blue"):null),msgBox(t)],
+        [o?botonWA(p.telefono,t,marcar):null,o?btn("Ya enviado",marcar):null,btn("Contestó",est("contesto"),p.estado==="contesto"?"sel":""),btn("Cita",est("cita"),p.estado==="cita"?"sel":""),btn("Ha vuelto",est("vino"),p.estado==="vino"?"sel":""),btn("Baja",est("baja"),p.estado==="baja"?"sel":""),btn("Sin WhatsApp",est("sinwa"),p.estado==="sinwa"?"sel":"")])})):vacio(fDorm==="hoy"?(D.pacientes.length?"No quedan mensajes para hoy.":"Todavía no hay lista. Cárgala abajo."):"Nada por aquí.")));
+  var sg={a:0,b:0,c:0};dm.forEach(function(p){if(p._m<12)sg.a++;else if(p._m<24)sg.b++;else sg.c++});
+  main.append(caja("Cómo está la lista",h("div",{class:"tw"},h("table",null,h("tr",null,h("th",null,"Tiempo sin venir"),h("th",{class:"n"},P())),h("tr",null,h("td",null,C.meses_dormido+"-12 meses"),h("td",{class:"n"},num(sg.a))),h("tr",null,h("td",null,"12-24 meses"),h("td",{class:"n"},num(sg.b))),h("tr",null,h("td",null,"Más de 24 meses"),h("td",{class:"n"},num(sg.c))),h("tr",{class:"total"},h("td",null,"TOTAL"),h("td",{class:"n"},num(dm.length)))))));
+  main.append(caja("Cargar o actualizar la lista de "+P(),h("p",{class:"muted small"},"El Excel de vuestro programa: nombre, móvil y fecha de la última visita"+(C.tipo==="vet"?" (y la mascota)":"")+". Nada de historiales. Si alguien ya está, se actualiza sin perder su estado."),cargarPacientes()));
+}
+
+/* ----- REPOSICIÓN ----- */
+async function compro(r,msg){await hacer(function(){return resultado("reposicion",r.precio,r.producto+": "+r.nombre)},msg||"Venta apuntada: +"+eur(r.precio));await guardar("reposiciones",r,{ultima_compra:hoyISO(),avisado_en:null})}
+function vReposicion(){
+  var hoy=reposHoy(),res=resMes("reposicion"),act=D.reposiciones.filter(function(r){return r.estado==="activo"});
+  main.append(kpis([["Avisar hoy",num(hoy.length)],["Clientes con reposición",num(act.length)],["Vendido este mes",num(res.length)+" · "+eur(sumar(res,"importe")),"good"]]));
+  main.append(card("Avisar hoy",null,h("p",{class:"muted small"},"Sale 5 días antes de que se le acabe. Cuando vuelva a comprar, pulsa «Ha comprado» y el contador empieza otra vez."),
+    hoy.length?h("div",{class:"stack"},hoy.map(function(r){var t=rellenar(plantilla("rp"),r);return item(r.nombre+" · "+r.producto,"cada "+r.dias+" días · última compra "+fechaCorta(r.ultima_compra),msgBox(t),[botonWA(r.telefono,t,function(){guardar("reposiciones",r,{avisado_en:new Date().toISOString()})}),btn("Ha comprado",function(){compro(r)}),btn("Ya no lo quiere",function(){guardar("reposiciones",r,{estado:"baja"})},"warn")])})):vacio("Hoy no hay que avisar a nadie.")));
+  main.append(card("Todos",null,act.length?h("div",{class:"stack"},act.slice().sort(function(a,b){return (a.dias-diasDesde(a.ultima_compra))-(b.dias-diasDesde(b.ultima_compra))}).map(function(r){var q=r.dias-diasDesde(r.ultima_compra);return item(r.nombre+" · "+r.producto,q>0?"se le acaba en "+q+" días":"se le acabó hace "+(-q)+" días",null,[btn("Ha comprado",function(){compro(r)}),btn("Borrar",function(){quitar("reposiciones",r)},"warn")])})):vacio("Todavía no hay nadie. Apunta abajo a quien compra algo que se le acaba.")));
+  var prods=def().productos,f={n:inp("rpNom"),t:inp("rpTel",{inputmode:"tel"}),p:inp("rpProd",{list:"rpLista",value:prods[0][0]}),d:inp("rpDias",{type:"number",min:"5",value:String(prods[0][1])}),pr:inp("rpPrecio",{inputmode:"decimal",value:String(prods[0][2])}),u:inp("rpUlt",{type:"date",value:hoyISO()})};
+  main.append(caja("Apuntar un cliente",h("datalist",{id:"rpLista"},prods.map(function(x){return h("option",{value:x[0]})})),h("div",{class:"cols"},campo("Nombre",f.n),campo("Móvil",f.t),campo("Producto",f.p),campo("Le dura (días)",f.d),campo("Precio (€)",f.pr),campo("Última compra",f.u)),
+    h("div",null,btn("Apuntar",async function(){var t=normTel(f.t.value);if(!f.n.value.trim()||!t.ok){toast("Falta el nombre o el móvil");return}await nuevo("reposiciones",[{clinica_id:C.id,nombre:f.n.value.trim(),telefono:t.n,producto:f.p.value.trim()||"producto",dias:Math.max(5,+f.d.value||30),precio:parseImporte(f.pr.value),ultima_compra:f.u.value||hoyISO()}],"Apuntado")},"main"))));
+}
+
+/* ----- CLUB ----- */
+function sumarMes(iso,n){var d=new Date(iso+"T12:00:00");d.setMonth(d.getMonth()+n);return isoDia(d)}
+function vClub(){
+  var act=D.socios.filter(function(s){return s.estado==="activo"}),cu=cuotasHoy(),su=sesionesSinUsar(),res=resMes("club");
+  main.append(kpis([["Socios activos",num(act.length)],["Ingreso fijo al mes",eur(sumar(act,"cuota")),"good"],["Cobrado este mes",eur(sumar(res,"importe")),"good"],["Cuotas por cobrar",num(cu.length),cu.length?"bad":""]]));
+  main.append(card("1 · Cuotas que tocan",null,h("p",{class:"muted small"},"Si cobras por domiciliación, solo pulsa «Cobrado». Si te pagan en la clínica, manda el recordatorio."),
+    cu.length?h("div",{class:"stack"},cu.map(function(s){var t=rellenar(plantilla("so"),s);return item(s.nombre+" · "+s.plan,eur(s.cuota)+" · tocaba el "+fechaCorta(s.proximo_cobro),msgBox(t),[btn("Cobrado",async function(){await hacer(function(){return resultado("club",s.cuota,s.plan+": "+s.nombre)},"Cobrado: +"+eur(s.cuota));await guardar("socios",s,{proximo_cobro:sumarMes(s.proximo_cobro,1),usadas:0})},"main"),botonWA(s.telefono,t,function(){guardar("socios",s,{avisado_en:new Date().toISOString()})}),btn("Pausar",function(){guardar("socios",s,{estado:"pausa"})})])})):vacio("No hay cuotas pendientes.")));
+  main.append(card("2 · Sesiones sin usar",null,h("p",{class:"muted small"},"A partir del día 15, quien no ha usado sus sesiones del mes. Si las usan, no se dan de baja."),
+    su.length?h("div",{class:"stack"},su.map(function(s){var t=rellenar(plantilla("su"),s);return item(s.nombre+" · "+s.plan,s.usadas+" de "+s.sesiones_mes+" usadas",msgBox(t),[botonWA(s.telefono,t,function(){guardar("socios",s,{avisado_en:new Date().toISOString()})})])})):vacio("Todos al día.")));
+  main.append(card("Socios",null,D.socios.filter(function(s){return s.estado!=="baja"}).length?h("div",{class:"stack"},D.socios.filter(function(s){return s.estado!=="baja"}).map(function(s){return item(s.nombre+" · "+s.plan,eur(s.cuota)+"/mes · próximo cobro "+fechaCorta(s.proximo_cobro),h("div",{class:"row"},pill(s.estado==="activo"?"Activo":"En pausa",s.estado==="activo"?"green":"amber"),s.sesiones_mes?pill(s.usadas+" de "+s.sesiones_mes+" sesiones"):null),[s.sesiones_mes?btn("Sesión usada",function(){guardar("socios",s,{usadas:Math.min(s.sesiones_mes,s.usadas+1)})}):null,s.estado==="pausa"?btn("Reactivar",function(){guardar("socios",s,{estado:"activo"})}):null,btn("Dar de baja",function(){guardar("socios",s,{estado:"baja"})},"warn")])})):vacio("Todavía no hay socios. Crea el primero abajo.")));
+  var pl=def().planes,f={n:inp("soNom"),t:inp("soTel",{inputmode:"tel"}),p:inp("soPlan",{list:"soLista",value:pl[0][0]}),c:inp("soCuota",{inputmode:"decimal",value:String(pl[0][1])}),s:inp("soSes",{type:"number",min:"0",value:String(pl[0][2])}),a:inp("soAlta",{type:"date",value:hoyISO()})};
+  main.append(caja("Nuevo socio",h("datalist",{id:"soLista"},pl.map(function(x){return h("option",{value:x[0]})})),h("p",{class:"muted small"},"Ideas de planes para tu clínica: "+pl.map(function(x){return x[0]+" ("+eur(x[1])+"/mes)"}).join(", ")+". Lo que va con receta lo decide siempre el profesional."),
+    h("div",{class:"cols"},campo("Nombre",f.n),campo("Móvil",f.t),campo("Plan",f.p),campo("Cuota al mes (€)",f.c),campo("Sesiones incluidas al mes",f.s),campo("Primer cobro",f.a)),
+    h("div",null,btn("Dar de alta",async function(){var t=normTel(f.t.value);if(!f.n.value.trim()){toast("Falta el nombre");return}await nuevo("socios",[{clinica_id:C.id,nombre:f.n.value.trim(),telefono:t.ok?t.n:"",plan:f.p.value.trim()||"Plan",cuota:parseImporte(f.c.value),sesiones_mes:Math.max(0,+f.s.value||0),alta:hoyISO(),proximo_cobro:f.a.value||hoyISO()}],"Socio dado de alta")},"main"))));
+}
+
+/* ----- COBROS ----- */
+async function pagado(c,msg){await hacer(function(){return resultado("cobros",c.importe,c.concepto+": "+c.nombre)},msg||"Cobrado: +"+eur(c.importe));await guardar("cobros",c,{estado:"pagado",pagado_en:hoyISO()})}
+function vCobros(){
+  var pend=D.cobros.filter(function(c){return c.estado==="pendiente"}),hoy=cobrosHoy(),res=resMes("cobros");
+  main.append(kpis([["Te deben",num(pend.length)+" · "+eur(sumar(pend,"importe")),"bad"],["Recordar hoy",num(hoy.length)],["Cobrado este mes",eur(sumar(res,"importe")),"good"]]));
+  main.append(card("Recordar hoy",null,h("p",{class:"muted small"},"Un recordatorio amable cada 7 días, como mucho tres. Si no paga después, lo decides tú."),
+    hoy.length?h("div",{class:"stack"},hoy.map(function(c){var t=rellenar(plantilla("co"),c);return item(c.nombre+" · "+c.concepto,eur(c.importe)+" · vencía el "+fechaCorta(c.vence)+" · "+c.avisos+" avisos",msgBox(t),[botonWA(c.telefono,t,function(){guardar("cobros",c,{avisos:c.avisos+1,ts_aviso:new Date().toISOString()},"Recordatorio apuntado")}),btn("Pagado",function(){pagado(c)})])})):vacio("Hoy no hay que recordar nada.")));
+  main.append(card("Todo lo pendiente",null,pend.length?h("div",{class:"stack"},pend.slice().sort(function(a,b){return a.vence<b.vence?-1:1}).map(function(c){return item(c.nombre+" · "+c.concepto,eur(c.importe)+" · vence "+fechaCorta(c.vence),null,[btn("Pagado",function(){pagado(c)}),btn("No se cobrará",function(){guardar("cobros",c,{estado:"incobrable"})},"warn")])})):vacio("Nadie te debe nada.")));
+  var f={n:inp("coNom"),t:inp("coTel",{inputmode:"tel"}),c:inp("coCon"),i:inp("coImp",{inputmode:"decimal"}),v:inp("coVence",{type:"date",value:hoyISO()})};
+  main.append(caja("Apuntar un pago pendiente",h("div",{class:"cols"},campo("Nombre",f.n),campo("Móvil",f.t),campo("Concepto",f.c),campo("Importe (€)",f.i),campo("Vence",f.v)),h("div",null,btn("Apuntar",async function(){var t=normTel(f.t.value);if(!f.n.value.trim()||!parseImporte(f.i.value)){toast("Falta el nombre o el importe");return}await nuevo("cobros",[{clinica_id:C.id,nombre:f.n.value.trim(),telefono:t.ok?t.n:"",concepto:f.c.value.trim()||"tratamiento",importe:parseImporte(f.i.value),vence:f.v.value||hoyISO()}],"Apuntado")},"main"))));
+}
+
+/* ----- RESEÑAS ----- */
+function vResenas(){
+  var mes=mesISO(new Date()),pedMes=D.resenas.filter(function(r){return mesDe(r.pedida_en)===mes}).length,porPedir=D.resenas.filter(resenaPorPedir);
+  main.append(kpis([["Por pedir",num(porPedir.length)],["Pedidas este mes",num(pedMes),"good"],["Objetivo","15 al mes"]]));
+  if(!C.enlace_resena)main.append(h("div",{class:"demo-bar",style:"margin-top:12px"},h("b",null,"Falta el enlace de reseñas. "),"En Google Business Profile: «Pedir reseñas» → copiar el enlace → pegarlo en Ajustes."));
+  main.append(card("Pedir hoy",null,h("p",{class:"muted small"},"A todos los que vinieron, no solo a los contentos (lo exige Google). Al responder una reseña, nunca se confirma que alguien es paciente."),
+    porPedir.length?h("div",{class:"stack"},porPedir.map(function(r){var t=rellenar(plantilla("r"),r);return item(r.nombre,telFmt(r.telefono)+" · vino el "+fechaCorta(r.fecha),msgBox(t),[botonWA(r.telefono,t,function(){guardar("resenas",r,{pedida_en:new Date().toISOString()},"Reseña pedida")}),btn("Ya pedida",function(){guardar("resenas",r,{pedida_en:new Date().toISOString()})}),btn("Quitar",function(){quitar("resenas",r)},"warn")])})):vacio("No hay nadie pendiente.")));
+  var ta=h("textarea",{id:"rLista",placeholder:"Marta Ruiz;612345678\nJordi Puig;698765432"}),fe=inp("rFecha",{type:"date",value:hoyISO()});
+  main.append(caja("Añadir los "+P()+" del día",h("p",{class:"muted small"},"Una línea por persona: nombre y móvil (copiado de la agenda)."),h("div",{class:"cols"},campo("Día de la visita",fe)),ta,h("div",null,btn("Añadir",async function(){var filas=[];lineas(ta.value).forEach(function(p){if(p.length<2)return;var t=normTel(p[p.length-1]);if(!t.ok)return;filas.push({clinica_id:C.id,nombre:p.slice(0,-1).join(" "),telefono:t.n,fecha:fe.value||hoyISO()})});if(!filas.length){toast("No hay líneas con nombre y móvil");return}await nuevo("resenas",filas,filas.length+" añadidos");ta.value=""},"main"))));
+}
+
+/* ----- RECOMENDACIONES ----- */
+function vRecomendaciones(){
+  var mes=mesISO(new Date()),porPedir=D.recomendaciones.filter(recoPorPedir),ped=D.recomendaciones.filter(function(r){return mesDe(r.pedida_en)===mes}).length,res=resMes("recomendaciones");
+  main.append(kpis([["Por pedir",num(porPedir.length)],["Pedidas este mes",num(ped)],["Nuevos por recomendación",num(res.length)+" · "+eur(sumar(res,"importe")),"good"]]));
+  if(!C.telefono)main.append(h("div",{class:"demo-bar",style:"margin-top:12px"},h("b",null,"Falta el teléfono de la clínica "),"en Ajustes, para que lo puedan pasar."));
+  main.append(card("Pedir que te recomienden",null,h("p",{class:"muted small"},"Solo a quien está contento de verdad: el que te felicita, el que repite."+(C.tipo==="den"||C.tipo==="fis"?" En clínicas sanitarias, sin regalos ni premios a cambio.":"")),
+    porPedir.length?h("div",{class:"stack"},porPedir.map(function(r){var t=rellenar(plantilla("rc"),r);return item(r.nombre,telFmt(r.telefono),msgBox(t),[botonWA(r.telefono,t,function(){guardar("recomendaciones",r,{pedida_en:new Date().toISOString()},"Pedida")}),btn("Quitar",function(){quitar("recomendaciones",r)},"warn")])})):vacio("Nadie pendiente. Añade abajo a tus mejores "+P()+".")));
+  var n=inp("rcNom"),t=inp("rcTel",{inputmode:"tel"});
+  main.append(caja("Añadir a quien pedírselo",h("div",{class:"cols"},campo("Nombre",n),campo("Móvil",t)),h("div",null,btn("Añadir",async function(){var tt=normTel(t.value);if(!n.value.trim()||!tt.ok){toast("Falta el nombre o el móvil");return}await nuevo("recomendaciones",[{clinica_id:C.id,nombre:n.value.trim(),telefono:tt.n}],"Añadido")},"main"))));
+  var nn=inp("rcNuevo"),qq=inp("rcQuien");
+  main.append(card("Ha llegado alguien recomendado",null,h("p",{class:"muted small"},"Pregunta siempre a los nuevos «¿cómo nos has conocido?» y apúntalo aquí. Así sabes cuánto te traen las recomendaciones."),h("div",{class:"cols"},campo("Nombre del nuevo",nn),campo("¿Quién le recomendó?",qq)),
+    h("div",null,btn("Apuntar",async function(){if(!nn.value.trim()){toast("Falta el nombre");return}await hacer(function(){return resultado("recomendaciones",C.ticket,nn.value.trim()+" (recomendado por "+(qq.value.trim()||"—")+")")},"Apuntado: +"+eur(C.ticket));nn.value="";qq.value="";pintar()},"main")),
+    res.length?h("div",{class:"stack"},res.map(function(r){return item(r.detalle,fechaCorta(r.fecha),null,null)})):null));
+}
+
+/* ----- INFORME ----- */
+function calcInforme(mes){
+  var vin=D.pacientes.filter(function(p){return p.estado==="vino"&&mesDe(p.ts)===mes});
+  var pa=D.presupuestos.filter(function(p){return p.estado==="aceptado"&&mesDe(p.aceptado_en)===mes}),paSeg=pa.filter(function(p){return p.seguimientos>0});
+  var ll=D.llamadas.filter(function(l){return mesDe(l.recibida)===mes}),llC=ll.filter(function(l){return l.estado==="cita"});
+  var r=function(m){return D.resultados.filter(function(x){return x.modulo===m&&mesDe(x.fecha)===mes})};
+  var filas=[
+    ["llamadas","Llamadas perdidas convertidas en cita",llC.length+" de "+ll.length+" perdidas",sumar(llC,"importe")],
+    ["citas","Huecos rellenados con la lista de espera",r("citas").length+" huecos",sumar(r("citas"),"importe")],
+    ["presupuestos","Presupuestos aceptados tras el seguimiento",paSeg.length+" de "+pa.length+" aceptados",sumar(paSeg,"importe")],
+    ["revisiones","Revisiones que pidieron cita",r("revisiones").length+" citas",sumar(r("revisiones"),"importe")],
+    ["dormidos",(C.tipo==="vet"?"Clientes":"Pacientes")+" dormidos que han vuelto",vin.length+" han vuelto",vin.length*(+C.ticket||0)],
+    ["reposicion","Reposiciones vendidas",r("reposicion").length+" ventas",sumar(r("reposicion"),"importe")],
+    ["club","Cuotas del club cobradas",r("club").length+" cuotas",sumar(r("club"),"importe")],
+    ["cobros","Cobros pendientes recuperados",r("cobros").length+" cobros",sumar(r("cobros"),"importe")],
+    ["recomendaciones","Nuevos por recomendación",r("recomendaciones").length+" nuevos",sumar(r("recomendaciones"),"importe")]
+  ].filter(function(f){return modVisible(modDe(f[0]))});
+  var total=filas.reduce(function(s,f){return s+f[3]},0);
+  return {filas:filas,total:total,resenas:D.resenas.filter(function(x){return mesDe(x.pedida_en)===mes}).length,fijo:sumar(D.socios.filter(function(s){return s.estado==="activo"}),"cuota")};
+}
+var mesInf=null;
+function vInforme(){
+  var hoy=new Date();mesInf=mesInf||mesISO(hoy);var opts=[];for(var i=0;i<12;i++){var d=new Date(hoy.getFullYear(),hoy.getMonth()-i,1);opts.push([mesISO(d),MESES[d.getMonth()]+" "+d.getFullYear()])}
+  var sel=h("select",{style:"width:auto","aria-label":"Mes",onchange:function(){mesInf=sel.value;pintar()}},opts.map(function(o){return h("option",{value:o[0],selected:o[0]===mesInf},o[1])}));
+  var I=calcInforme(mesInf),nomMes=opts.filter(function(o){return o[0]===mesInf})[0][1];
+  main.append(card("Informe de "+nomMes,sel,kpis([["Dinero que han traído",eur(I.total),"good"],["Ingreso fijo del club",eur(I.fijo)+"/mes"],["Reseñas pedidas",num(I.resenas)]]),
+    h("div",{class:"tw"},h("table",null,h("tr",null,h("th",null,"Herramienta"),h("th",null,"Detalle"),h("th",{class:"n"},"€")),I.filas.map(function(f){var m=modDe(f[0]);return h("tr",null,h("td",null,h("span",{class:"m-"+f[0],style:"color:var(--m);font-weight:600"},f[1])),h("td",null,f[2]),h("td",{class:"n"},eur(f[3])))}),h("tr",{class:"total"},h("td",null,"TOTAL"),h("td",null,""),h("td",{class:"n"},eur(I.total))))),
+    h("p",{class:"muted small"},"Las citas, revisiones, dormidos y recomendaciones se cuentan a "+eur(C.ticket)+" (lo que deja una visita, en Ajustes). Los presupuestos, solo si se aceptaron después de algún seguimiento.")));
+  var ta=h("textarea",{id:"decis",placeholder:"1. …\n2. …\n3. …"});DB.decision(C.id,mesInf).then(function(t){ta.value=t||""});
+  main.append(card("Tres decisiones para el mes siguiente",null,ta,h("div",null,btn("Guardar",async function(){await hacer(function(){return DB.guardarDecision(C.id,mesInf,ta.value)},"Guardado")},"main"))));
+  var texto="INFORME DE "+nomMes.toUpperCase()+" — "+C.nombre+"\n\nDinero que han traído las herramientas: "+eur(I.total)+"\n"+I.filas.map(function(f){return "· "+f[1]+": "+f[2]+" → "+eur(f[3])}).join("\n")+"\n· Reseñas pedidas: "+I.resenas+"\n· Ingreso fijo del club: "+eur(I.fijo)+" al mes";
+  var pre=h("pre",{class:"report"},texto);main.append(caja("Informe para copiar",pre,h("div",null,btn("Copiar",function(){copiar(texto,pre)}))));
+}
+
+/* ----- AJUSTES ----- */
+function vAjustes(){
+  var F={};function c(k,label,tipo,extra){F[k]=h("input",Object.assign({id:"a_"+k,type:tipo||"text",value:C[k]==null?"":C[k]},extra||{}));return campo(label,F[k])}
+  var tipo=h("select",{id:"a_tipo"},[["den","Dental"],["est","Estética"],["fis","Fisioterapia"],["vet","Veterinaria"],["otro","Otro"]].map(function(o){return h("option",{value:o[0],selected:C.tipo===o[0]},o[1])}));
+  main.append(card("La clínica",h("span",{class:"pill"},"Plan "+(C.plan==="basico"?"Básico":"Completo")),h("div",{class:"cols"},c("nombre","Nombre"),campo("Tipo",tipo),c("firma","Quién firma los mensajes",null,{placeholder:"Laura, de la clínica"}),c("telefono","Teléfono de la clínica",null,{inputmode:"tel"}),c("ticket","Lo que deja una visita (€)","number",{min:"0"}),c("enlace_resena","Enlace de reseñas de Google",null,{placeholder:"https://g.page/r/…/review"}),c("ciclo_meses","Cada cuántos meses toca revisión","number",{min:"1",max:"24"}),c("meses_dormido","Dormido a partir de (meses)","number",{min:"1",max:"60"}),c("max_meses","No escribir si hace más de (meses)","number",{min:"6",max:"120"}),c("lote","Mensajes a dormidos al día (máx. 50)","number",{min:"5",max:"50"}),c("dias_oleada","Días entre mensajes a dormidos","number",{min:"2",max:"14"})),
+    h("div",null,btn("Guardar",async function(){var tl=normTel(F.telefono.value);var p={nombre:F.nombre.value.trim()||C.nombre,tipo:tipo.value,firma:F.firma.value.trim(),telefono:tl.n||F.telefono.value.trim(),ticket:+F.ticket.value||0,enlace_resena:F.enlace_resena.value.trim(),ciclo_meses:Math.min(24,Math.max(1,+F.ciclo_meses.value||6)),meses_dormido:Math.max(1,+F.meses_dormido.value||6),max_meses:Math.max(6,+F.max_meses.value||60),lote:Math.min(50,Math.max(5,+F.lote.value||40)),dias_oleada:Math.min(14,Math.max(2,+F.dias_oleada.value||5))};await hacer(function(){return DB.editarClinica(C.id,p)},"Guardado");Object.assign(C,p);cabecera();pintar()},"main"))));
+  var checks={};
+  main.append(card("Qué herramientas veis",null,h("p",{class:"muted small"},"Quita las que no uséis para que la pantalla sea más sencilla."),h("div",{class:"stack"},MODS.filter(function(m){return !(m.plan==="completo"&&C.plan==="basico")}).map(function(m){checks[m.id]=h("input",{type:"checkbox",id:"mod_"+m.id,checked:!(C.modulos&&C.modulos[m.id]===false),style:"width:auto"});return h("label",{style:"display:flex;gap:10px;align-items:center;font-weight:500"},checks[m.id],h("span",{class:"m-"+m.id,style:"color:var(--m);font-weight:700"},m.nombre))})),
+    h("div",null,btn("Guardar",async function(){var mo={};Object.keys(checks).forEach(function(k){if(!checks[k].checked)mo[k]=false});await hacer(function(){return DB.editarClinica(C.id,{modulos:mo})},"Guardado");C.modulos=mo;pintar()},"main"))));
+  var tas={};
+  main.append(caja("Mensajes",h("p",{class:"muted small"},"Palabras que se cambian solas: {nombre} {mascota} {meses} {cuando} {centro} {firma} {tratamiento} {profesional} {enlace} {telefono} {cita} {producto} {plan} {importe} {sesiones} {concepto}. Los mensajes a dormidos y de revisión terminan con BAJA. En dental y fisio, nunca descuentos ni regalos."),
+    NOMBRES_MSG.map(function(k){tas[k[0]]=h("textarea",{id:"t_"+k[0]});tas[k[0]].value=plantilla(k[0]);return campo(k[1],tas[k[0]])}),
+    h("div",{class:"row"},btn("Guardar mensajes",async function(){var pl={};NOMBRES_MSG.forEach(function(k){pl[k[0]]=tas[k[0]].value});if(["d1","d2","d3","v"].some(function(k){return !/BAJA/i.test(pl[k])})){toast("Falta la palabra BAJA en un mensaje a dormidos o de revisión");return}await hacer(function(){return DB.editarClinica(C.id,{plantillas:pl})},"Mensajes guardados");C.plantillas=pl},"main"),btn("Volver a los de serie",async function(){await hacer(function(){return DB.editarClinica(C.id,{plantillas:{}})},"Mensajes de serie recuperados");C.plantillas={};pintar()}))));
+  main.append(card("Dar acceso a alguien del equipo",null,h("p",null,"Que se cree una cuenta en esta página con su correo y, al entrar, escriba este código:"),h("p",{style:"font:600 1.3rem var(--mono);letter-spacing:.08em"},C.codigo_alta||"—"),h("p",{class:"muted small"},"Si alguien deja la clínica, pídenos que le quitemos el acceso.")));
+  var conf=h("div",{class:"confirm",hidden:true},h("p",null,h("b",null,"¿Borrar la lista de "+P()+"? "),"Se borran de Pacientes dormidos y Revisiones, con sus estados. Lo demás no se toca."),h("div",{class:"row"},btn("Sí, borrar",async function(){await hacer(function(){return DB.borrarTodo("pacientes",C.id)},"Lista borrada");D.pacientes=[];pintar()},"warn"),btn("Cancelar",function(){conf.hidden=true})));
+  var nombresT={pacientes:P(),presupuestos:"presupuestos",resenas:"reseñas",llamadas:"llamadas",citas:"citas",socios:"socios",reposiciones:"reposiciones",cobros:"cobros",resultados:"resultados"};
+  main.append(caja("Tus datos",h("p",{class:"muted small"},"Los datos son de la clínica. Descárgalos cuando quieras."),h("div",{class:"row"},Object.keys(nombresT).map(function(t){return btn("Descargar "+nombresT[t],function(){var a=D[t];if(!a.length){toast("No hay datos");return}var cols=Object.keys(a[0]).filter(function(k){return k[0]!=="_"&&k!=="clinica_id"});descargar(t+"-"+hoyISO()+".csv",csv([cols].concat(a.map(function(x){return cols.map(function(c){return x[c]})}))))})})),h("div",null,btn("Borrar la lista de "+P(),function(){conf.hidden=false},"warn")),conf));
+  if(!DB.demo){var p1=h("input",{type:"password",id:"nuevaClave",autocomplete:"new-password"});main.append(caja("Mi contraseña",campo("Nueva contraseña",p1),h("div",null,btn("Cambiar",async function(){if(p1.value.length<8){toast("Mínimo 8 caracteres");return}await hacer(function(){return DB.cambiarClave(p1.value)},"Contraseña cambiada");p1.value=""}))))}
+  if(DB.demo)main.append(caja("Demo",h("p",{class:"muted small"},"Vuelve a los datos de ejemplo del principio."),h("div",null,btn("Reiniciar la demo",async function(){DB.reiniciar();await arrancar()}))));
+}
+
+/* ----- CLÍNICAS (administrador) ----- */
+function vClinicas(){
+  var cont=h("div",{class:"stack"});
+  CLIN.forEach(function(c){var pl=h("select",{style:"width:auto","aria-label":"Plan",onchange:async function(){await hacer(function(){return DB.editarClinica(c.id,{plan:pl.value})},"Plan cambiado");c.plan=pl.value;pintar()}},[["basico","Básico · 99 €/mes"],["completo","Completo · 199 €/mes"]].map(function(o){return h("option",{value:o[0],selected:c.plan===o[0]},o[1])}));
+    cont.append(item(c.nombre,"Código "+c.codigo_alta,h("div",{class:"row"},pill(c.activa?"Activa":"De baja",c.activa?"green":"red"),pill({den:"Dental",est:"Estética",fis:"Fisioterapia",vet:"Veterinaria",otro:"Otro"}[c.tipo]||c.tipo)),[btn("Abrir",function(){VISTA="inicio";elegir(c.id)},"main"),pl,btn(c.activa?"Dar de baja":"Activar",async function(){await hacer(function(){return DB.editarClinica(c.id,{activa:!c.activa})},c.activa?"De baja: su equipo ya no entra":"Activada");c.activa=!c.activa;pintar()},c.activa?"warn":"")]))});
+  main.append(card("Clínicas",h("span",{class:"muted small"},CLIN.length+" en total"),h("p",{class:"muted small"},"Si una clínica deja de pagar, «Dar de baja» le quita el acceso sin borrar sus datos."),cont));
+  var nom=inp("cNom"),tipo=h("select",{id:"cTipo"},[["den","Dental"],["est","Estética"],["fis","Fisioterapia"],["vet","Veterinaria"],["otro","Otro"]].map(function(o){return h("option",{value:o[0]},o[1])})),plan=h("select",{id:"cPlan"},[["completo","Completo"],["basico","Básico"]].map(function(o){return h("option",{value:o[0]},o[1])}));
+  main.append(card("Nueva clínica",null,h("div",{class:"cols"},campo("Nombre",nom),campo("Tipo",tipo),campo("Plan",plan)),h("div",null,btn("Crear",async function(){if(!nom.value.trim()){toast("Falta el nombre");return}var d=DEF[tipo.value];var c=await hacer(function(){return DB.crearClinica({nombre:nom.value.trim(),tipo:tipo.value,plan:plan.value,meses_dormido:d.meses,max_meses:d.max,ciclo_meses:d.ciclo,ticket:d.ticket})},"Clínica creada");CLIN.push(c);cabecera();pintar()},"main")),h("p",{class:"muted small"},"Después, pásale el enlace de esta página y su código de alta.")));
+}
+
+/* ================= arranque ================= */
+function cabecera(){var r=$("topRight");r.innerHTML="";
+  if(CLIN.length>1){var s=h("select",{style:"width:auto","aria-label":"Clínica",onchange:function(){elegir(s.value)}},CLIN.map(function(c){return h("option",{value:c.id,selected:C&&c.id===C.id},c.nombre+(c.activa?"":" (de baja)"))}));r.append(s)}else if(C)r.append(h("strong",null,C.nombre));
+  r.append(h("span",{class:"muted small"},U?U.email:""));if(!DB.demo)r.append(btn("Salir",async function(){await DB.salir();location.reload()}))}
+async function elegir(id){
+  C=CLIN.filter(function(c){return c.id===id})[0];C.modulos=C.modulos||{};C.plantillas=C.plantillas||{};C.plan=C.plan||"completo";C.ciclo_meses=C.ciclo_meses||def().ciclo;C.telefono=C.telefono||"";
+  try{localStorage.setItem("panel-vuelven-clinica",id)}catch(e){}
+  main.innerHTML="";main.append(vacio("Cargando…"));
+  var res=await Promise.all(TABLAS.map(function(t){return DB.todo(t,id)}));TABLAS.forEach(function(t,i){D[t]=res[i]});
+  cabecera();if(VISTA==="clinicas"&&!ADMIN)VISTA="inicio";pintar();
+}
+function pantallaLogin(msg){
+  $("app").hidden=true;var L=$("login");L.hidden=false;L.innerHTML="";
+  var email=inp("lgEmail",{type:"email",autocomplete:"email"}),pass=inp("lgPass",{type:"password",autocomplete:"current-password"}),info=h("p",{class:"muted small"},msg||"");
+  async function run(fn){info.textContent="Un momento…";try{await fn()}catch(e){info.textContent=e.message||String(e)}}
+  L.append(h("div",{class:"brand"},h("span",{class:"mark"},h("i"),h("i"),h("i"),h("i")),h("h1",null,"Panel VUELVEN")),h("p",{class:"muted"},"Las herramientas de tu clínica para que no se escape ningún paciente, en un solo sitio."),
+    h("div",{class:"card"},campo("Correo",email),campo("Contraseña",pass),h("div",{class:"row"},btn("Entrar",function(){run(async function(){U=await DB.entrar(email.value.trim(),pass.value);await despues()})},"main"),btn("Crear cuenta",function(){run(async function(){if(pass.value.length<8)throw new Error("La contraseña tiene que tener al menos 8 caracteres.");var u=await DB.registrar(email.value.trim(),pass.value);if(u){U=u;await despues()}else info.textContent="Cuenta creada. Te hemos mandado un correo: ábrelo para confirmar y vuelve a entrar."})})),
+      h("button",{type:"button",class:"btn",style:"justify-self:start;background:transparent;padding-left:0",onclick:function(){run(async function(){if(!email.value.trim())throw new Error("Escribe tu correo arriba.");await DB.recordar(email.value.trim());info.textContent="Te hemos mandado un correo para cambiar la contraseña."})}},"He olvidado la contraseña"),info));
+}
+function pantallaCodigo(){
+  $("app").hidden=true;var L=$("login");L.hidden=false;L.innerHTML="";var cod=inp("lgCod",{style:"text-transform:uppercase;font-family:var(--mono)"}),info=h("p",{class:"muted small"});
+  L.append(h("h1",null,"Un paso más"),h("div",{class:"card"},h("p",null,"Escribe el código de tu clínica. Te lo da VUELVEN o la persona responsable."),campo("Código de alta",cod),h("div",{class:"row"},btn("Entrar en la clínica",async function(){info.textContent="Un momento…";try{await DB.unirse(cod.value);await despues()}catch(e){info.textContent=e.message}},"main"),btn("Salir",async function(){await DB.salir();location.reload()})),info));
+}
+async function despues(){
+  ADMIN=await DB.esAdmin();CLIN=await DB.clinicas();var visibles=ADMIN?CLIN:CLIN.filter(function(c){return c.activa});
+  if(!visibles.length&&!ADMIN){pantallaCodigo();return}
+  $("login").hidden=true;$("app").hidden=false;$("demoBar").hidden=!DB.demo;
+  var g=null;try{g=localStorage.getItem("panel-vuelven-clinica");VISTA=localStorage.getItem("panel-vuelven-vista")||"inicio"}catch(e){}
+  if(!CLIN.length){C=null;VISTA="clinicas";cabecera();pintar();return}
+  await elegir(CLIN.some(function(c){return c.id===g})?g:(visibles[0]||CLIN[0]).id);
+}
+async function arrancar(){
+  main=$("main");DB=window.PanelDatos.crear();
+  if(!DB.demo)DB.alCambiarSesion(function(ev){if(ev==="PASSWORD_RECOVERY"){VISTA="ajustes";toast("Escribe tu nueva contraseña en Ajustes")}});
+  U=await DB.usuario();if(!U&&DB.demo)U=await DB.entrar();if(!U){pantallaLogin();return}await despues();
+}
+window.addEventListener("DOMContentLoaded",function(){arrancar().catch(function(e){document.body.append(h("p",{class:"empty"},"Error al arrancar: "+(e.message||e)))})});
+})();
+
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div id="login" class="login" hidden></div>
+  <div id="app" hidden>
+    <header class="top">
+      <div class="brand"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><h1>Panel VUELVEN</h1></div>
+      <div class="right" id="topRight"></div>
+    </header>
+    <div class="demo-bar" id="demoBar" hidden><b>DEMO con datos inventados.</b> Así lo verá la clínica. Los botones de WhatsApp no abren nada en la demo; puedes tocarlo todo sin miedo.</div>
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Secciones"></nav>
+    <main id="main"></main>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+</body>
+</html>
